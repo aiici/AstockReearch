@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A股资金流向与价格走势相关性研究</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0f1117;
+  --card: #1a1d29;
+  --border: #2a2e3e;
+  --text: #e0e3eb;
+  --text-dim: #8b90a5;
+  --accent: #5b8def;
+  --up: #ff3d3d;     /* 涨/正 — 红色（中国惯例） */
+  --down: #00c853;   /* 跌/负 — 绿色 */
+  --green: #00c853;
+  --red: #ff3d3d;
+  --orange: #ff9800;
+  --blue: #2196f3;
+  --purple: #ab47bc;
+  --cyan: #00bcd4;
+}
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1a1d29 0%, #2a2e3e 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #5b8def, #00bcd4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header .info { display: flex; align-items: center; gap: 20px; font-size: 13px; color: var(--text-dim); }
+.header .info span { display: flex; align-items: center; gap: 6px; }
+.btn-refresh {
+  background: linear-gradient(135deg, #5b8def, #4a6de0);
+  color: #fff; border: none; padding: 8px 20px; border-radius: 8px;
+  cursor: pointer; font-size: 13px; font-weight: 500;
+  transition: all 0.3s;
+}
+.btn-refresh:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(91,141,239,0.3); }
+.btn-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Layout */
+.container { max-width: 1600px; margin: 0 auto; padding: 20px 32px; }
+.section { margin-bottom: 24px; }
+.section-title {
+  font-size: 15px; font-weight: 600; margin-bottom: 12px;
+  padding-left: 12px; border-left: 3px solid var(--accent);
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .sub { font-size: 12px; color: var(--text-dim); font-weight: 400; }
+
+/* Cards Grid */
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1200px) {
+  .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* Card */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px; position: relative;
+}
+.card-title { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+
+/* Signal Cards */
+.signal-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px; cursor: pointer;
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.signal-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.signal-card .stock-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.signal-card .stock-group { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
+.signal-card .signal-item {
+  font-size: 12px; padding: 3px 8px; border-radius: 4px;
+  margin-bottom: 3px; display: flex; align-items: center; gap: 4px;
+}
+.signal-item.warning { background: rgba(255,152,0,0.12); color: var(--orange); }
+.signal-item.danger { background: rgba(255,61,61,0.12); color: #ff3d3d; }
+.signal-item.info { background: rgba(91,141,239,0.12); color: var(--accent); }
+
+/* Chart Container */
+.chart-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
+}
+.chart-card .chart-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.chart-card .chart-header h3 { font-size: 14px; font-weight: 600; }
+.chart-body { width: 100%; }
+
+/* Stock selector */
+.stock-selector {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 12px; border-radius: 6px;
+  font-size: 13px; cursor: pointer; outline: none;
+}
+.stock-selector option { background: var(--card); }
+
+/* Loading */
+.loading {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; height: 60vh; gap: 16px;
+}
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Stat badges */
+.stat-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500;
+}
+.stat-badge.positive { background: rgba(255,61,61,0.12); color: var(--up); }
+.stat-badge.negative { background: rgba(0,200,83,0.12); color: var(--down); }
+.stat-badge.neutral { background: rgba(33,150,243,0.12); color: var(--blue); }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+th { color: var(--text-dim); font-weight: 500; background: rgba(255,255,255,0.02); }
+td { color: var(--text); }
+.positive-text { color: var(--up); }
+.negative-text { color: var(--down); }
+
+.hidden { display: none !important; }
+
+/* Cap group summary */
+.cap-group {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.cap-group-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px;
+}
+.cap-group-item .label { font-size: 13px; font-weight: 500; }
+.cap-group-item .value { font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>📊 A股资金流向与价格走势相关性研究</h1>
+  <div class="info">
+    <span id="researchDate">—</span>
+    <span id="dataRange">—</span>
+    <button class="btn-refresh" id="btnRefresh" onclick="refreshData()">刷新数据</button>
+    <a href="/system" style="color:var(--cyan);font-size:12px;text-decoration:none;margin-left:12px;">信号系统→</a>
+    <a href="/logout" style="color:#6b7280;font-size:12px;text-decoration:none;margin-left:8px;">退出</a>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="loading" id="loadingScreen">
+  <div class="spinner"></div>
+  <div id="loadingText">正在加载数据...</div>
+</div>
+
+<!-- Main Content -->
+<div class="container hidden" id="mainContent">
+
+  <!-- 1. 当前信号 -->
+  <div class="section">
+    <div class="section-title">当前信号 <span class="sub">触发关注条件的标的</span></div>
+    <div class="grid grid-4" id="signalGrid"></div>
+  </div>
+
+  <!-- 2. 资金流概览 -->
+  <div class="section">
+    <div class="section-title">资金流概览 <span class="sub">各标的累计净流入（5日/20日/60日）</span></div>
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <div class="chart-header"><h3>主力净流入对比</h3></div>
+        <div id="chartMainFlow" class="chart-body" style="height:340px;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>四档资金结构（近20日）</h3></div>
+        <div id="chartFourTier" class="chart-body" style="height:340px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 个股详情 -->
+  <div class="section">
+    <div class="section-title">
+      个股详情
+      <select class="stock-selector" id="stockSelector" onchange="loadStockDetail()"></select>
+    </div>
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <div class="chart-header"><h3>收盘价 vs 主力资金净流入</h3></div>
+        <div id="chartKlineFlow" class="chart-body" style="height:360px;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>滚动相关系数（20日窗口）</h3></div>
+        <div id="chartRollingCorr" class="chart-body" style="height:360px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 条件回测 -->
+  <div class="section">
+    <div class="section-title">条件回测结果 <span class="sub">事件研究统计</span></div>
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <div class="chart-header"><h3>连续3日净流入 → 后续收益率</h3></div>
+        <div id="chartEvent3d" class="chart-body" style="height:340px;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>连续3日净流入 → 胜率</h3></div>
+        <div id="chartEvent3dWin" class="chart-body" style="height:340px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 大单信号 + 背离分析 -->
+  <div class="section">
+    <div class="section-title">大单信号与资金背离分析</div>
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <div class="chart-header"><h3>大单净占比>20%信号 → 次日表现</h3></div>
+        <div id="chartLargeOrder" class="chart-body" style="height:340px;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3 id="divTitle">资金背离时间线</h3></div>
+        <div id="chartDivergence" class="chart-body" style="height:340px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 市值分组对比 + 回测数据表 -->
+  <div class="section">
+    <div class="section-title">市值分组与详细数据</div>
+  <!-- 交易规则区域 -->
+  <div class="section" id="signalSection">
+    <div class="section-title">交易规则 <span class="sub">从数据挖掘出的≥70%胜率买卖信号，可直接应用于其他股票</span></div>
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <div class="chart-header"><h3>🟢 买入规则（≥70%胜率）</h3></div>
+        <div id="buyRulesContainer" style="max-height:420px;overflow-y:auto;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>🔴 卖出/回避规则</h3></div>
+        <div id="sellRulesContainer" style="max-height:420px;overflow-y:auto;"></div>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-top:16px;">
+      <div class="chart-header"><h3>信号胜率排行</h3></div>
+      <div style="overflow-x:auto;max-height:300px;overflow-y:auto;">
+        <table id="signalRankTable">
+          <thead>
+            <tr>
+              <th>信号</th><th>方向</th><th>持有</th><th>胜率</th>
+              <th>均收</th><th>样本</th><th>盈亏比</th><th>适用</th>
+            </tr>
+          </thead>
+          <tbody id="signalRankBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 规律分析区域 -->
+  <div class="section" id="patternSection">
+    <div class="section-title">规律分析与可复用规则 <span class="sub">从数据中提取的量化信号体系</span></div>
+    <div id="rulesContainer" style="margin-bottom:16px;"></div>
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <div class="chart-header"><h3>连续净流入天数 vs 后续收益</h3></div>
+        <div id="chartConsecutive" class="chart-body" style="height:300px;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>资金流规模分档 vs 5日收益</h3></div>
+        <div id="chartFlowSize" class="chart-body" style="height:300px;"></div>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-top:16px;">
+      <div class="chart-card">
+        <div class="chart-header"><h3>相关系数 vs 信号胜率</h3></div>
+        <div id="chartCorrScatter" class="chart-body" style="height:300px;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>大单占比阈值优化</h3></div>
+        <div id="chartThreshold" class="chart-body" style="height:300px;"></div>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-top:16px;">
+      <div class="chart-card">
+        <div class="chart-header"><h3>市值分组信号效果对比</h3></div>
+        <div id="chartCapEffect" class="chart-body" style="height:280px;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>背离类型反转概率</h3></div>
+        <div id="chartDivType" class="chart-body" style="height:280px;"></div>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-top:16px;">
+      <div class="chart-header"><h3>规律总结</h3></div>
+      <div id="summaryText" style="padding:8px 4px;font-size:13px;line-height:1.8;color:var(--text);"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <div class="chart-header"><h3>市值分组资金流特征（近20日）</h3></div>
+        <div id="chartCapGroup" class="chart-body" style="height:280px;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>回测详细数据</h3></div>
+        <div style="overflow-x:auto; max-height:280px; overflow-y:auto;">
+          <table id="eventTable">
+            <thead>
+              <tr>
+                <th>标的</th><th>3日触发</th><th>5日均收</th><th>5日胜率</th>
+                <th>10日均收</th><th>10日胜率</th><th>大单信号</th><th>次日胜率</th>
+              </tr>
+            </thead>
+            <tbody id="eventTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════
+// 全局数据
+// ════════════════════════════════════════════════════════════════════
+let VIZ_DATA = null;
+let currentStockCode = null;
+const charts = {};
+
+// 颜色常量
+const COLORS = {
+  // 中国惯例：红涨绿跌
+  up: '#ff3d3d',     // 涨/正 — 红色
+  down: '#00c853',   // 跌/负 — 绿色
+  green: '#ff3d3d',  // 正/涨 — 红色（中国惯例）
+  red: '#00c853',    // 负/跌 — 绿色
+  orange: '#ff9800',
+  blue: '#2196f3', purple: '#ab47bc', cyan: '#00bcd4',
+  accent: '#5b8def', text: '#e0e3eb', textDim: '#8b90a5',
+  border: '#2a2e3e', bg: '#1a1d29'
+};
+const PALETTE = ['#5b8def','#00c853','#ff9800','#ab47bc','#00bcd4','#ff3d3d','#7c4dff','#ff5252'];
+
+// ════════════════════════════════════════════════════════════════════
+// 工具函数
+// ════════════════════════════════════════════════════════════════════
+
+function formatAmount(amount) {
+  if (amount === null || amount === undefined || isNaN(amount)) return 'N/A';
+  const abs = Math.abs(amount);
+  if (abs >= 1e8) return (amount/1e8).toFixed(2) + '亿';
+  if (abs >= 1e4) return (amount/1e4).toFixed(0) + '万';
+  return amount.toFixed(0);
+}
+
+function formatPct(val) {
+  if (val === null || val === undefined || isNaN(val)) return 'N/A';
+  return val.toFixed(2) + '%';
+}
+
+function getColor(val) {
+  if (val > 0) return COLORS.green;
+  if (val < 0) return COLORS.red;
+  return COLORS.textDim;
+}
+
+function getStockCodeList() {
+  if (!VIZ_DATA) return [];
+  return Object.keys(VIZ_DATA.targets);
+}
+
+function getStockName(code) {
+  const t = VIZ_DATA?.targets?.[code];
+  return t ? t.info.name : code;
+}
+
+// 初始化图表
+function initChart(id) {
+  const dom = document.getElementById(id);
+  if (!dom) return null;
+  const chart = echarts.init(dom, null, { renderer: 'canvas' });
+  return chart;
+}
+
+function resizeAllCharts() {
+  Object.values(charts).forEach(c => c && c.resize());
+}
+window.addEventListener('resize', resizeAllCharts);
+
+// ════════════════════════════════════════════════════════════════════
+// 数据加载
+// ════════════════════════════════════════════════════════════════════
+
+// 鉴权辅助
+function authToken() {
+  return localStorage.getItem('token') || '';
+}
+function authHeaders(extra) {
+  const t = authToken();
+  return Object.assign({ 'Authorization': 'Bearer ' + t }, extra || {});
+}
+function handle401(resp) {
+  if (resp.status === 401) {
+    window.location.href = '/login';
+    return true;
+  }
+  return false;
+}
+
+async function loadData() {
+  document.getElementById('loadingScreen').classList.remove('hidden');
+  document.getElementById('loadingText').textContent = '正在加载数据...';
+
+  try {
+    const resp = await fetch('/api/data', { headers: authHeaders() });
+    if (handle401(resp)) return;
+    if (!resp.ok) throw new Error('数据未准备');
+    VIZ_DATA = await resp.json();
+
+    document.getElementById('researchDate').textContent = '研究日期: ' + VIZ_DATA.meta.research_date;
+    document.getElementById('dataRange').textContent = '数据区间: ' + VIZ_DATA.meta.start_date + ' ~ ' + VIZ_DATA.meta.research_date;
+
+    document.getElementById('loadingScreen').classList.add('hidden');
+    document.getElementById('mainContent').classList.remove('hidden');
+
+    renderAll();
+  } catch (e) {
+    document.getElementById('loadingText').textContent = '数据未准备，请点击"刷新数据"按钮获取...';
+    document.getElementById('mainContent').classList.add('hidden');
+  }
+}
+
+async function refreshData() {
+  const btn = document.getElementById('btnRefresh');
+  btn.disabled = true;
+  btn.textContent = '正在刷新...';
+  document.getElementById('loadingScreen').classList.remove('hidden');
+  document.getElementById('mainContent').classList.add('hidden');
+  document.getElementById('loadingText').textContent = '正在获取数据并分析（约1-2分钟）...';
+
+  try {
+    const resp = await fetch('/api/refresh', { method: 'POST', headers: authHeaders() });
+    const result = await resp.json();
+    if (handle401(resp)) return;
+    if (result.status === 'ok') {
+      await loadData();
+    } else {
+      alert('刷新失败: ' + result.message);
+      document.getElementById('loadingScreen').classList.add('hidden');
+    }
+  } catch (e) {
+    alert('刷新出错: ' + e.message);
+    document.getElementById('loadingScreen').classList.add('hidden');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '刷新数据';
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 渲染所有图表
+// ════════════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════════
+// 规律分析渲染
+// ════════════════════════════════════════════════════════════════════
+let PATTERN_DATA = null;
+
+async function loadPatterns() {
+  try {
+    const resp = await fetch('/api/patterns', { headers: authHeaders() });
+    if (handle401(resp)) return;
+    PATTERN_DATA = await resp.json();
+    renderRules();
+    renderConsecutiveChart();
+    renderFlowSizeChart();
+    renderCorrScatterChart();
+    renderThresholdChart();
+    renderCapEffectChart();
+    renderDivTypeChart();
+    renderSummaryText();
+  } catch(e) {
+    console.error('规律分析加载失败:', e);
+  }
+}
+
+function renderRules() {
+  const container = document.getElementById('rulesContainer');
+  const rules = PATTERN_DATA?.actionable_rules || [];
+  if (!rules.length) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:20px;">暂无规律数据</div>';
+    return;
+  }
+  container.innerHTML = `<div class="grid grid-3">` + rules.map(r => `
+    <div class="card" style="border-left:3px solid var(--accent);">
+      <div style="font-size:12px;color:var(--accent);margin-bottom:6px;">规则 ${r.id}</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px;line-height:1.4;">${r.rule}</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:4px;">📊 ${r.rationale}</div>
+      <div style="font-size:12px;color:var(--cyan);">⚙ ${r.action}</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:6px;border-top:1px solid var(--border);padding-top:4px;">${r.scope}</div>
+    </div>`).join('') + `</div>`;
+}
+
+function renderConsecutiveChart() {
+  const chart = initChart('chartConsecutive');
+  charts.consecutive = chart;
+  if (!chart || !PATTERN_DATA?.consecutive_days_analysis) return;
+
+  const data = PATTERN_DATA.consecutive_days_analysis;
+  const days = data.map(d => d.consecutive_days + '日');
+  const winRates = data.map(d => d.win_rate_5d);
+  const avgReturns = data.map(d => d.avg_return_5d);
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', formatter: p => {
+      const d = data[p[0].dataIndex];
+      return `${d.consecutive_days}日连续流入<br/>样本: ${d.sample_5d}<br/>5日胜率: <b style="color:${COLORS.up}">${d.win_rate_5d}%</b><br/>5日均收: <b style="color:${d.avg_return_5d>=0?COLORS.up:COLORS.down}">${d.avg_return_5d}%</b>`;
+    }},
+    legend: { data: ['5日胜率%', '5日均收益%'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: days, axisLabel: { color: COLORS.textDim } },
+    yAxis: [
+      { type: 'value', name: '胜率%', max: 100, axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+      { type: 'value', name: '收益%', axisLabel: { color: COLORS.textDim }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '5日胜率%', type: 'bar', data: winRates, itemStyle: { color: COLORS.accent }, barWidth: '35%' },
+      { name: '5日均收益%', type: 'line', yAxisIndex: 1, data: avgReturns,
+        lineStyle: { color: COLORS.orange, width: 2 }, symbol: 'circle', symbolSize: 6 }
+    ]
+  });
+}
+
+function renderFlowSizeChart() {
+  const chart = initChart('chartFlowSize');
+  charts.flowSize = chart;
+  if (!chart || !PATTERN_DATA?.flow_size_analysis) return;
+
+  const data = PATTERN_DATA.flow_size_analysis;
+  const labels = data.map(d => d.bucket);
+  const winRates = data.map(d => d.win_rate);
+  const avgReturns = data.map(d => d.avg_return_5d);
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: p => {
+      const d = data[p[0].dataIndex];
+      return `${d.bucket}<br/>样本: ${d.sample}<br/>5日胜率: <b>${d.win_rate}%</b><br/>5日均收: <b style="color:${d.avg_return_5d>=0?COLORS.up:COLORS.down}">${d.avg_return_5d}%</b>`;
+    }},
+    legend: { data: ['胜率%', '均收益%'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: labels, axisLabel: { color: COLORS.textDim, fontSize: 10, rotate: 20 } },
+    yAxis: [
+      { type: 'value', name: '胜率%', max: 100, axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+      { type: 'value', name: '收益%', axisLabel: { color: COLORS.textDim }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '胜率%', type: 'bar', data: winRates, itemStyle: { color: function(p) { return p.value >= 50 ? COLORS.up : COLORS.down; } }, barWidth: '35%' },
+      { name: '均收益%', type: 'line', yAxisIndex: 1, data: avgReturns,
+        lineStyle: { color: COLORS.orange, width: 2 }, symbol: 'circle', symbolSize: 6 }
+    ]
+  });
+}
+
+function renderCorrScatterChart() {
+  const chart = initChart('chartCorrScatter');
+  charts.corrScatter = chart;
+  if (!chart || !PATTERN_DATA?.corr_vs_win) return;
+
+  const scatterData = PATTERN_DATA.corr_vs_win.data.map(d => ({
+    value: [d.corr_mean, d.win_rate_5d], name: d.name
+  }));
+  const hc = PATTERN_DATA.corr_vs_win.high_corr_group;
+  const lc = PATTERN_DATA.corr_vs_win.low_corr_group;
+
+  chart.setOption({
+    tooltip: { formatter: p => `${p.data.name}<br/>相关系数: ${p.data.value[0]}<br/>5日胜率: <b>${p.data.value[1]}%</b>` },
+    legend: { data: ['高相关组(≥0.7)', '低相关组(<0.7)'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'value', name: '当日相关系数均值', min: 0, max: 1, axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+    yAxis: { type: 'value', name: '5日胜率%', max: 100, axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+    series: [{
+      type: 'scatter', data: scatterData, symbolSize: 14,
+      itemStyle: { color: function(p) { return p.data.value[0] >= 0.7 ? COLORS.up : COLORS.down; } },
+      label: { show: true, formatter: p => p.data.name, position: 'right', fontSize: 11, color: COLORS.text }
+    }],
+    markLine: { silent: true, data: [{ xAxis: 0.7, lineStyle: { color: COLORS.orange, type: 'dashed' } }] }
+  });
+}
+
+function renderThresholdChart() {
+  const chart = initChart('chartThreshold');
+  charts.threshold = chart;
+  if (!chart || !PATTERN_DATA?.threshold_optimization) return;
+
+  const data = PATTERN_DATA.threshold_optimization.data;
+  const best = PATTERN_DATA.threshold_optimization.best;
+  const thresholds = data.map(d => d.threshold + '%');
+  const winRates = data.map(d => d.win_rate);
+  const samples = data.map(d => d.sample);
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', formatter: p => {
+      const d = data[p[0].dataIndex];
+      const isBest = best && d.threshold === best.threshold;
+      return `${d.threshold}%${isBest ? ' ⭐最佳' : ''}<br/>样本: ${d.sample}<br/>次日胜率: <b>${d.win_rate}%</b><br/>次日均收: ${d.avg_next_return}%`;
+    }},
+    legend: { data: ['次日胜率%'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: thresholds, axisLabel: { color: COLORS.textDim } },
+    yAxis: [
+      { type: 'value', name: '胜率%', max: 100, axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+      { type: 'value', name: '样本数', axisLabel: { color: COLORS.textDim }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '次日胜率%', type: 'bar', data: winRates,
+        itemStyle: { color: function(p) { return best && data[p.dataIndex].threshold === best.threshold ? COLORS.up : COLORS.accent; } },
+        barWidth: '40%' },
+      { name: '样本数', type: 'line', yAxisIndex: 1, data: samples,
+        lineStyle: { color: COLORS.orange, width: 2 }, symbol: 'circle', symbolSize: 6 }
+    ]
+  });
+}
+
+function renderCapEffectChart() {
+  const chart = initChart('chartCapEffect');
+  charts.capEffect = chart;
+  if (!chart || !PATTERN_DATA?.cap_group_effectiveness) return;
+
+  const capData = PATTERN_DATA.cap_group_effectiveness;
+  const groups = Object.keys(capData);
+  const winRates = groups.map(g => capData[g].avg_win_rate_5d || 0);
+  const returns = groups.map(g => capData[g].avg_return_5d || 0);
+  const reversals = groups.map(g => capData[g].avg_reversal_prob || 0);
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', formatter: p => {
+      const g = groups[p[0].dataIndex];
+      const d = capData[g];
+      let html = g + ` (${d.count}只: ${d.stocks.join(', ')})<br/>`;
+      html += `3日信号5日胜率: <b>${d.avg_win_rate_5d ?? 'N/A'}%</b><br/>`;
+      html += `5日均收: ${d.avg_return_5d ?? 'N/A'}%<br/>`;
+      html += `大单信号胜率: ${d.avg_lo_win_rate ?? 'N/A'}%<br/>`;
+      html += `背离反转概率: ${d.avg_reversal_prob ?? 'N/A'}%`;
+      return html;
+    }},
+    legend: { data: ['5日胜率%', '5日均收%', '反转概率%'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: groups, axisLabel: { color: COLORS.text, fontSize: 13 } },
+    yAxis: { type: 'value', name: '%', axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+    series: [
+      { name: '5日胜率%', type: 'bar', data: winRates, itemStyle: { color: COLORS.accent }, barWidth: '20%' },
+      { name: '5日均收%', type: 'bar', data: returns, itemStyle: { color: function(p) { return p.value >= 0 ? COLORS.up : COLORS.down; } }, barWidth: '20%' },
+      { name: '反转概率%', type: 'bar', data: reversals, itemStyle: { color: COLORS.orange }, barWidth: '20%' }
+    ]
+  });
+}
+
+function renderDivTypeChart() {
+  const chart = initChart('chartDivType');
+  charts.divType = chart;
+  if (!chart || !PATTERN_DATA?.divergence_type_summary) return;
+
+  const data = PATTERN_DATA.divergence_type_summary;
+  const types = data.map(d => d.type);
+  const reversalProbs = data.map(d => d.reversal_prob);
+  const counts = data.map(d => d.total_count);
+
+  chart.setOption({
+    tooltip: { trigger: 'item', formatter: p => {
+      const d = data[p.dataIndex];
+      return `${d.type}<br/>总样本: ${d.total_count}<br/>反转次数: ${d.total_reversal}<br/>反转概率: <b>${d.reversal_prob}%</b><br/>背离后5日均收: ${d.avg_return}%`;
+    }},
+    legend: { data: ['反转概率%'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: types, axisLabel: { color: COLORS.text, fontSize: 12 } },
+    yAxis: [
+      { type: 'value', name: '反转概率%', max: 100, axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+      { type: 'value', name: '样本数', axisLabel: { color: COLORS.textDim }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '反转概率%', type: 'bar', data: reversalProbs,
+        itemStyle: { color: function(p) { return p.value >= 50 ? COLORS.up : COLORS.down; } }, barWidth: '30%',
+        label: { show: true, formatter: '{c}%', color: COLORS.text, fontSize: 12 }
+      },
+      { name: '样本数', type: 'line', yAxisIndex: 1, data: counts,
+        lineStyle: { color: COLORS.orange, width: 2 }, symbol: 'circle', symbolSize: 6 }
+    ]
+  });
+}
+
+function renderSummaryText() {
+  const el = document.getElementById('summaryText');
+  const points = PATTERN_DATA?.summary_text || [];
+  if (!points.length) { el.innerHTML = '暂无总结'; return; }
+  el.innerHTML = points.map(p => `<div style="margin-bottom:6px;">${p}</div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 交易规则渲染
+// ════════════════════════════════════════════════════════════════════
+let SIGNAL_DATA = null;
+
+async function loadSignals() {
+  try {
+    const resp = await fetch('/api/signals', { headers: authHeaders() });
+    if (handle401(resp)) return;
+    SIGNAL_DATA = await resp.json();
+    renderBuyRules();
+    renderSellRules();
+    renderSignalRankTable();
+  } catch(e) {
+    console.error('交易信号加载失败:', e);
+  }
+}
+
+function renderBuyRules() {
+  const container = document.getElementById('buyRulesContainer');
+  const rules = SIGNAL_DATA?.buy_rules_70 || [];
+  if (!rules.length) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:20px;">暂无≥70%胜率买入规则</div>';
+    return;
+  }
+  container.innerHTML = rules.map((r, i) => {
+    const wr = r.win_rate;
+    const wrColor = wr >= 80 ? COLORS.up : COLORS.accent;
+    const pf = r.profit_factor || 0;
+    return `
+    <div class="card" style="margin-bottom:10px;border-left:3px solid ${COLORS.up};">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span style="font-size:14px;font-weight:600;">买${i+1} ${r.signal}</span>
+        <span style="font-size:16px;font-weight:700;color:${wrColor};">${wr}%</span>
+      </div>
+      <div style="display:flex;gap:12px;font-size:11px;color:var(--text-dim);margin-bottom:4px;">
+        <span>持有: ${r.hold_days}日</span>
+        <span>均收: <b style="color:${r.avg_return>=0?COLORS.up:COLORS.down}">${r.avg_return}%</b></span>
+        <span>样本: ${r.sample}</span>
+        <span>盈亏比: ${pf >= 999 ? '∞' : pf}</span>
+      </div>
+      <div style="font-size:12px;color:var(--cyan);">⚙ ${r.action}</div>
+      ${r.filter && r.filter !== '全市场' ? `<div style="font-size:11px;color:var(--text-dim);">适用: ${r.filter}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderSellRules() {
+  const container = document.getElementById('sellRulesContainer');
+  const rules = SIGNAL_DATA?.sell_rules || [];
+  if (!rules.length) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:20px;">暂无卖出规则</div>';
+    return;
+  }
+  container.innerHTML = rules.map((r, i) => {
+    const wr = r.win_rate;
+    const wrColor = wr >= 70 ? COLORS.up : COLORS.accent;
+    return `
+    <div class="card" style="margin-bottom:10px;border-left:3px solid ${COLORS.orange};">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span style="font-size:14px;font-weight:600;">卖${i+1} ${r.signal}</span>
+        <span style="font-size:16px;font-weight:700;color:${wrColor};">${wr}%</span>
+      </div>
+      <div style="display:flex;gap:12px;font-size:11px;color:var(--text-dim);margin-bottom:4px;">
+        <span>持有: ${r.hold_days}日</span>
+        <span>均收: <b style="color:${r.avg_return>=0?COLORS.up:COLORS.down}">${r.avg_return}%</b></span>
+        <span>样本: ${r.sample}</span>
+      </div>
+      <div style="font-size:12px;color:var(--orange);">⚙ ${r.action}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderSignalRankTable() {
+  const tbody = document.getElementById('signalRankBody');
+  const signals = SIGNAL_DATA?.all_signals || [];
+  if (!signals.length) { tbody.innerHTML = ''; return; }
+
+  // 取前20个
+  const top = signals.slice(0, 20);
+  tbody.innerHTML = top.map(s => {
+    const isBuy = s.type === 'buy';
+    const wrColor = s.win_rate >= 70 ? COLORS.up : COLORS.textDim;
+    const retColor = s.avg_return >= 0 ? COLORS.up : COLORS.down;
+    return `<tr>
+      <td style="text-align:left;font-size:11px;">${s.name}</td>
+      <td style="color:${isBuy ? COLORS.up : COLORS.orange};font-size:11px;">${isBuy ? '买入' : '卖出'}</td>
+      <td style="font-size:11px;">${s.hold_days}日</td>
+      <td style="color:${wrColor};font-weight:600;font-size:12px;">${s.win_rate}%</td>
+      <td style="color:${retColor};font-size:11px;">${s.avg_return}%</td>
+      <td style="font-size:11px;">${s.sample}</td>
+      <td style="font-size:11px;">${(s.profit_factor||0) >= 999 ? '∞' : (s.profit_factor||0)}</td>
+      <td style="font-size:10px;color:var(--text-dim);">${s.filter || '全市场'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAll() {
+  renderSignals();
+  loadPatterns();
+  loadSignals();
+  renderMainFlowChart();
+  renderFourTierChart();
+  renderStockSelector();
+  renderEvent3dChart();
+  renderEvent3dWinChart();
+  renderLargeOrderChart();
+  renderCapGroupChart();
+  renderEventTable();
+
+  // 默认加载第一个有个股数据的标的
+  const codes = getStockCodeList().filter(c => VIZ_DATA.targets[c].timeseries.length > 0);
+  if (codes.length > 0) {
+    currentStockCode = codes[0];
+    document.getElementById('stockSelector').value = currentStockCode;
+    loadStockDetail();
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 1. 信号卡片
+// ════════════════════════════════════════════════════════════════════
+
+function renderSignals() {
+  const grid = document.getElementById('signalGrid');
+  const signals = VIZ_DATA.signals || [];
+
+  if (signals.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-dim);padding:20px;">当前无标的触发显著关注条件</div>';
+    return;
+  }
+
+  grid.innerHTML = signals.map(s => {
+    const sigItems = s.signals.map(sig =>
+      `<div class="signal-item ${sig.level}">${sig.text}</div>`
+    ).join('');
+    return `
+      <div class="signal-card" onclick="selectStock('${s.code}')">
+        <div class="stock-name">${s.name}</div>
+        <div class="stock-group">${s.group} | ${s.code}</div>
+        ${sigItems}
+      </div>`;
+  }).join('');
+}
+
+function selectStock(code) {
+  const selector = document.getElementById('stockSelector');
+  selector.value = code;
+  currentStockCode = code;
+  loadStockDetail();
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 2. 主力净流入对比图
+// ════════════════════════════════════════════════════════════════════
+
+function renderMainFlowChart() {
+  const chart = initChart('chartMainFlow');
+  charts.mainFlow = chart;
+
+  const codes = Object.keys(VIZ_DATA.targets);
+  const names = codes.map(c => VIZ_DATA.targets[c].info.name);
+
+  const periods = ['5日', '20日', '60日'];
+  const series = periods.map((period, idx) => {
+    return {
+      name: '近' + period,
+      type: 'bar',
+      data: codes.map(c => {
+        const s = VIZ_DATA.targets[c].summary;
+        if (s && s[period]) return parseFloat((s[period].main_net / 1e8).toFixed(2));
+        return 0;
+      }),
+      itemStyle: {
+        color: (params) => {
+          const colors = [COLORS.blue, COLORS.orange, COLORS.purple];
+          return colors[idx];
+        }
+      }
+    };
+  });
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        let html = params[0].axisValue + '<br/>';
+        params.forEach(p => {
+          html += `${p.marker} ${p.seriesName}: <b style="color:${p.value>=0?COLORS.green:COLORS.red}">${p.value}亿</b><br/>`;
+        });
+        return html;
+      }
+    },
+    legend: { data: series.map(s => s.name), textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: names, axisLabel: { color: COLORS.textDim, fontSize: 11, rotate: 15 } },
+    yAxis: { type: 'value', name: '亿元', axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+    series: series
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 3. 四档资金结构图
+// ════════════════════════════════════════════════════════════════════
+
+function renderFourTierChart() {
+  const chart = initChart('chartFourTier');
+  charts.fourTier = chart;
+
+  const codes = Object.keys(VIZ_DATA.targets).filter(c => {
+    const s = VIZ_DATA.targets[c].summary;
+    return s && s['20日'];
+  });
+  const names = codes.map(c => VIZ_DATA.targets[c].info.name);
+
+  const tiers = [
+    { key: 'super_net', name: '超大单', color: '#ff3d3d' },
+    { key: 'large_net', name: '大单', color: '#ff9800' },
+    { key: 'mid_net', name: '中单', color: '#2196f3' },
+    { key: 'small_net', name: '小单', color: '#00c853' },
+  ];
+
+  const series = tiers.map(t => ({
+    name: t.name,
+    type: 'bar',
+    stack: 'total',
+    data: codes.map(c => {
+      const s = VIZ_DATA.targets[c].summary['20日'];
+      return parseFloat((s[t.key] / 1e8).toFixed(2));
+    }),
+    itemStyle: { color: t.color }
+  }));
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        let html = params[0].axisValue + '（近20日）<br/>';
+        let total = 0;
+        params.forEach(p => { total += p.value; html += `${p.marker} ${p.seriesName}: <b>${p.value}亿</b><br/>`; });
+        html += `<b>主力合计: ${total.toFixed(2)}亿</b>`;
+        return html;
+      }
+    },
+    legend: { data: tiers.map(t => t.name), textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: names, axisLabel: { color: COLORS.textDim, fontSize: 11, rotate: 15 } },
+    yAxis: { type: 'value', name: '亿元', axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+    series: series
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 4. 个股选择器
+// ════════════════════════════════════════════════════════════════════
+
+function renderStockSelector() {
+  const selector = document.getElementById('stockSelector');
+  const codes = getStockCodeList();
+  selector.innerHTML = codes.map(c => {
+    const t = VIZ_DATA.targets[c];
+    return `<option value="${c}">${t.info.name} (${c})</option>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 5. K线+资金流 & 滚动相关系数
+// ════════════════════════════════════════════════════════════════════
+
+function loadStockDetail() {
+  currentStockCode = document.getElementById('stockSelector').value;
+  renderKlineFlowChart();
+  renderRollingCorrChart();
+  renderDivergenceChart();
+}
+
+function renderKlineFlowChart() {
+  const chart = initChart('chartKlineFlow');
+  charts.klineFlow = chart;
+  if (!chart) return;
+
+  const target = VIZ_DATA.targets[currentStockCode];
+  if (!target || !target.timeseries.length) return;
+
+  const dates = target.timeseries.map(t => t.date);
+  const closes = target.timeseries.map(t => t.close);
+  const mainNets = target.timeseries.map(t => t.main_net ? t.main_net / 1e8 : null);
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' },
+      formatter: function(params) {
+        let html = params[0].axisValue + '<br/>';
+        params.forEach(p => {
+          if (p.seriesName === '收盘价') {
+            html += `${p.marker} 收盘价: <b>${p.value?.toFixed(2)}</b><br/>`;
+          } else if (p.seriesName === '主力净流入') {
+            const val = p.value;
+            const color = val >= 0 ? COLORS.green : COLORS.red;
+            html += `${p.marker} 主力净流入: <b style="color:${color}">${val?.toFixed(2)}亿</b><br/>`;
+          }
+        });
+        return html;
+      }
+    },
+    legend: { data: ['收盘价', '主力净流入'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: dates, axisLabel: { color: COLORS.textDim, fontSize: 10 } },
+    yAxis: [
+      { type: 'value', name: '价格', position: 'left', axisLabel: { color: COLORS.accent }, splitLine: { lineStyle: { color: COLORS.border } } },
+      { type: 'value', name: '净流入(亿)', position: 'right', axisLabel: { color: COLORS.orange }, splitLine: { show: false } }
+    ],
+    series: [
+      {
+        name: '收盘价', type: 'line', data: closes, yAxisIndex: 0,
+        smooth: true, symbol: 'none', lineStyle: { color: COLORS.accent, width: 2 },
+        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgba(91,141,239,0.15)' },
+          { offset: 1, color: 'rgba(91,141,239,0)' }
+        ])}
+      },
+      {
+        name: '主力净流入', type: 'bar', data: mainNets, yAxisIndex: 1,
+        itemStyle: {
+          color: function(params) { return params.value >= 0 ? COLORS.green : COLORS.red; }
+        }
+      }
+    ],
+    dataZoom: [{ type: 'inside', start: 60, end: 100 }, { type: 'slider', start: 60, end: 100, height: 16, bottom: 0 }]
+  });
+}
+
+function renderRollingCorrChart() {
+  const chart = initChart('chartRollingCorr');
+  charts.rollingCorr = chart;
+  if (!chart) return;
+
+  const target = VIZ_DATA.targets[currentStockCode];
+  if (!target || !target.timeseries.length) return;
+
+  const dates = target.timeseries.filter(t => t.corr_same_day !== null).map(t => t.date);
+  const corrSame = target.timeseries.filter(t => t.corr_same_day !== null).map(t => t.corr_same_day);
+  const corrNext = target.timeseries.filter(t => t.corr_next_day !== null).map(t => t.corr_next_day);
+
+  // 统计信息
+  const stats = target.corr_stats;
+
+  chart.setOption({
+    title: {
+      text: `当日: 均值${stats?.same_day_mean ?? 'N/A'} | 次日: 均值${stats?.next_day_mean ?? 'N/A'}`,
+      left: 'center', textStyle: { color: COLORS.textDim, fontSize: 12 }
+    },
+    tooltip: { trigger: 'axis',
+      formatter: function(params) {
+        let html = params[0].axisValue + '<br/>';
+        params.forEach(p => {
+          html += `${p.marker} ${p.seriesName}: <b>${p.value?.toFixed(3)}</b><br/>`;
+        });
+        return html;
+      }
+    },
+    legend: { data: ['当日相关', '次日相关'], textStyle: { color: COLORS.textDim }, top: 25 },
+    grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+    xAxis: { type: 'category', data: dates, axisLabel: { color: COLORS.textDim, fontSize: 10 } },
+    yAxis: { type: 'value', name: '相关系数', min: -1, max: 1, axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+    series: [
+      { name: '当日相关', type: 'line', data: corrSame, smooth: true, symbol: 'none',
+        lineStyle: { color: COLORS.accent, width: 2 } },
+      { name: '次日相关', type: 'line', data: corrNext, smooth: true, symbol: 'none',
+        lineStyle: { color: COLORS.orange, width: 2 } }
+    ],
+    dataZoom: [{ type: 'inside', start: 50, end: 100 }, { type: 'slider', start: 50, end: 100, height: 16, bottom: 0 }]
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 6. 事件回测图表
+// ════════════════════════════════════════════════════════════════════
+
+function renderEvent3dChart() {
+  const chart = initChart('chartEvent3d');
+  charts.event3d = chart;
+
+  const codes = Object.keys(VIZ_DATA.targets);
+  const names = codes.map(c => VIZ_DATA.targets[c].info.name);
+
+  const ret5 = codes.map(c => {
+    const ev = VIZ_DATA.targets[c].event_3d;
+    if (ev && ev.results && ev.results['5']) return ev.results['5'].avg_return;
+    return null;
+  });
+  const ret10 = codes.map(c => {
+    const ev = VIZ_DATA.targets[c].event_3d;
+    if (ev && ev.results && ev.results['10']) return ev.results['10'].avg_return;
+    return null;
+  });
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        let html = params[0].axisValue + '<br/>';
+        params.forEach(p => {
+          const color = p.value >= 0 ? COLORS.green : COLORS.red;
+          html += `${p.marker} ${p.seriesName}: <b style="color:${color}">${p.value}%</b><br/>`;
+        });
+        return html;
+      }
+    },
+    legend: { data: ['5日均收益', '10日均收益'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: names, axisLabel: { color: COLORS.textDim, fontSize: 11, rotate: 15 } },
+    yAxis: { type: 'value', name: '%', axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+    series: [
+      { name: '5日均收益', type: 'bar', data: ret5,
+        itemStyle: { color: function(p) { return p.value >= 0 ? COLORS.green : COLORS.red; } } },
+      { name: '10日均收益', type: 'bar', data: ret10,
+        itemStyle: { color: function(p) { return p.value >= 0 ? 'rgba(255,61,61,0.6)' : 'rgba(0,200,83,0.6)'; } } }
+    ]
+  });
+}
+
+function renderEvent3dWinChart() {
+  const chart = initChart('chartEvent3dWin');
+  charts.event3dWin = chart;
+
+  const codes = Object.keys(VIZ_DATA.targets);
+  const names = codes.map(c => VIZ_DATA.targets[c].info.name);
+
+  const win5 = codes.map(c => {
+    const ev = VIZ_DATA.targets[c].event_3d;
+    if (ev && ev.results && ev.results['5']) return ev.results['5'].win_rate;
+    return null;
+  });
+  const win10 = codes.map(c => {
+    const ev = VIZ_DATA.targets[c].event_3d;
+    if (ev && ev.results && ev.results['10']) return ev.results['10'].win_rate;
+    return null;
+  });
+  const triggers = codes.map(c => {
+    const ev = VIZ_DATA.targets[c].event_3d;
+    return ev ? ev.n_events : 0;
+  });
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        let html = params[0].axisValue + '<br/>';
+        html += `触发次数: ${triggers[params[0].dataIndex]}<br/>`;
+        params.forEach(p => {
+          html += `${p.marker} ${p.seriesName}: <b>${p.value}%</b><br/>`;
+        });
+        return html;
+      }
+    },
+    legend: { data: ['5日胜率', '10日胜率'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: names, axisLabel: { color: COLORS.textDim, fontSize: 11, rotate: 15 } },
+    yAxis: { type: 'value', name: '%', max: 100, axisLabel: { color: COLORS.textDim, formatter: '{value}%' }, splitLine: { lineStyle: { color: COLORS.border } } },
+    series: [
+      { name: '5日胜率', type: 'bar', data: win5, itemStyle: { color: COLORS.accent } },
+      { name: '10日胜率', type: 'bar', data: win10, itemStyle: { color: COLORS.purple } }
+    ],
+    markLine: { silent: true, data: [{ yAxis: 50, lineStyle: { color: COLORS.textDim, type: 'dashed' } }] }
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 7. 大单信号图
+// ════════════════════════════════════════════════════════════════════
+
+function renderLargeOrderChart() {
+  const chart = initChart('chartLargeOrder');
+  charts.largeOrder = chart;
+
+  const codes = Object.keys(VIZ_DATA.targets);
+  const names = codes.map(c => VIZ_DATA.targets[c].info.name);
+
+  const nextRet = codes.map(c => {
+    const lo = VIZ_DATA.targets[c].large_order;
+    return lo && lo.n_events > 0 ? lo.avg_next_return : null;
+  });
+  const winRate = codes.map(c => {
+    const lo = VIZ_DATA.targets[c].large_order;
+    return lo && lo.n_events > 0 ? lo.win_rate : null;
+  });
+  const triggers = codes.map(c => {
+    const lo = VIZ_DATA.targets[c].large_order;
+    return lo ? lo.n_events : 0;
+  });
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        let html = params[0].axisValue + '<br/>';
+        html += `触发次数: ${triggers[params[0].dataIndex]}<br/>`;
+        params.forEach(p => {
+          const val = p.value;
+          const color = p.seriesName === '次日均收益' ? (val >= 0 ? COLORS.green : COLORS.red) : COLORS.accent;
+          html += `${p.marker} ${p.seriesName}: <b style="color:${color}">${val}${p.seriesName === '次日均收益' ? '%' : '%'}</b><br/>`;
+        });
+        return html;
+      }
+    },
+    legend: { data: ['次日均收益', '次日胜率'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: names, axisLabel: { color: COLORS.textDim, fontSize: 11, rotate: 15 } },
+    yAxis: [
+      { type: 'value', name: '收益%', axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+      { type: 'value', name: '胜率%', max: 100, axisLabel: { color: COLORS.textDim, formatter: '{value}%' }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '次日均收益', type: 'bar', data: nextRet,
+        itemStyle: { color: function(p) { return p.value >= 0 ? COLORS.green : COLORS.red; } } },
+      { name: '次日胜率', type: 'line', yAxisIndex: 1, data: winRate,
+        lineStyle: { color: COLORS.accent, width: 2 }, symbol: 'circle', symbolSize: 6 }
+    ]
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 8. 背离图
+// ════════════════════════════════════════════════════════════════════
+
+function renderDivergenceChart() {
+  const chart = initChart('chartDivergence');
+  charts.divergence = chart;
+  if (!chart) return;
+
+  const target = VIZ_DATA.targets[currentStockCode];
+  if (!target) return;
+
+  document.getElementById('divTitle').textContent = '资金背离时间线 - ' + target.info.name;
+
+  const divs = target.divergences || [];
+  if (divs.length === 0) {
+    chart.setOption({
+      title: { text: '近期无显著资金背离', left: 'center', top: 'center', textStyle: { color: COLORS.textDim, fontSize: 14 } }
+    });
+    return;
+  }
+
+  const dates = divs.map(d => d.date);
+  const priceChanges = divs.map(d => d.price_change);
+  const fundFlows = divs.map(d => d.fund_flow ? d.fund_flow / 1e8 : 0);
+  const types = divs.map(d => d.type);
+
+  chart.setOption({
+    tooltip: { trigger: 'axis',
+      formatter: function(params) {
+        const idx = params[0].dataIndex;
+        let html = dates[idx] + '<br/>';
+        html += `类型: <b style="color:${COLORS.orange}">${types[idx]}</b><br/>`;
+        html += `价格变动: <b style="color:${priceChanges[idx]>=0?COLORS.green:COLORS.red}">${priceChanges[idx]}%</b><br/>`;
+        html += `资金: <b style="color:${fundFlows[idx]>=0?COLORS.green:COLORS.red}">${fundFlows[idx].toFixed(2)}亿</b><br/>`;
+        if (divs[idx].future_5d_return !== null && divs[idx].future_5d_return !== undefined) {
+          html += `后5日收益: <b style="color:${divs[idx].future_5d_return>=0?COLORS.green:COLORS.red}">${divs[idx].future_5d_return}%</b>`;
+        }
+        return html;
+      }
+    },
+    legend: { data: ['价格变动%', '资金流(亿)'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: dates, axisLabel: { color: COLORS.textDim, fontSize: 10, rotate: 30 } },
+    yAxis: [
+      { type: 'value', name: '%', axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+      { type: 'value', name: '亿', axisLabel: { color: COLORS.textDim }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '价格变动%', type: 'bar', data: priceChanges,
+        itemStyle: { color: function(p) { return p.value >= 0 ? 'rgba(255,61,61,0.7)' : 'rgba(0,200,83,0.7)'; } } },
+      { name: '资金流(亿)', type: 'bar', yAxisIndex: 1, data: fundFlows,
+        itemStyle: { color: function(p) { return p.value >= 0 ? COLORS.cyan : COLORS.purple; } } }
+    ]
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 9. 市值分组图
+// ════════════════════════════════════════════════════════════════════
+
+function renderCapGroupChart() {
+  const chart = initChart('chartCapGroup');
+  charts.capGroup = chart;
+
+  const groups = VIZ_DATA.cap_group_summary || {};
+  const groupNames = Object.keys(groups);
+
+  if (groupNames.length === 0) {
+    chart.setOption({
+      title: { text: '无分组数据', left: 'center', top: 'center', textStyle: { color: COLORS.textDim } }
+    });
+    return;
+  }
+
+  const ratios = groupNames.map(g => groups[g].avg_large_ratio_20d);
+  const mains = groupNames.map(g => groups[g].avg_main_net_20d / 1e8);
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        let html = params[0].axisValue + '（近20日均值）<br/>';
+        params.forEach(p => {
+          const val = p.value;
+          const color = p.seriesName === '主力净流入(亿)' ? (val >= 0 ? COLORS.green : COLORS.red) : COLORS.accent;
+          html += `${p.marker} ${p.seriesName}: <b style="color:${color}">${val}${p.seriesName === '大单占比' ? '%' : '亿'}</b><br/>`;
+        });
+        return html;
+      }
+    },
+    legend: { data: ['主力净流入(亿)', '大单占比'], textStyle: { color: COLORS.textDim }, top: 0 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', data: groupNames, axisLabel: { color: COLORS.text, fontSize: 13 } },
+    yAxis: [
+      { type: 'value', name: '亿元', axisLabel: { color: COLORS.textDim }, splitLine: { lineStyle: { color: COLORS.border } } },
+      { type: 'value', name: '%', axisLabel: { color: COLORS.textDim }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '主力净流入(亿)', type: 'bar', data: mains,
+        itemStyle: { color: function(p) { return p.value >= 0 ? COLORS.green : COLORS.red; } },
+        barWidth: '30%' },
+      { name: '大单占比', type: 'line', yAxisIndex: 1, data: ratios,
+        lineStyle: { color: COLORS.accent, width: 2 }, symbol: 'circle', symbolSize: 8 }
+    ]
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 10. 回测数据表
+// ════════════════════════════════════════════════════════════════════
+
+function renderEventTable() {
+  const tbody = document.getElementById('eventTableBody');
+  const codes = Object.keys(VIZ_DATA.targets);
+
+  tbody.innerHTML = codes.map(c => {
+    const t = VIZ_DATA.targets[c];
+    const ev3 = t.event_3d;
+    const lo = t.large_order;
+
+    const r5 = ev3?.results?.['5'];
+    const r10 = ev3?.results?.['10'];
+
+    const cls = (v) => v >= 0 ? 'positive-text' : 'negative-text';
+
+    return `<tr>
+      <td style="text-align:left;">${t.info.name}</td>
+      <td>${ev3?.n_events ?? 0}</td>
+      <td class="${cls(r5?.avg_return ?? 0)}">${r5 ? r5.avg_return + '%' : 'N/A'}</td>
+      <td>${r5 ? r5.win_rate + '%' : 'N/A'}</td>
+      <td class="${cls(r10?.avg_return ?? 0)}">${r10 ? r10.avg_return + '%' : 'N/A'}</td>
+      <td>${r10 ? r10.win_rate + '%' : 'N/A'}</td>
+      <td>${lo?.n_events ?? 0}</td>
+      <td class="${cls(lo?.win_rate ?? 0)}">${lo && lo.n_events > 0 ? lo.win_rate + '%' : 'N/A'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 启动
+// ════════════════════════════════════════════════════════════════════
+
+loadData();
+</script>
+
+</body>
+</html>

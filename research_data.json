@@ -1,0 +1,1107 @@
+{
+  "sh000300": {
+    "info": {
+      "code": "sh000300",
+      "name": "沪深300",
+      "type": "index",
+      "cap_group": "指数"
+    },
+    "summary": null,
+    "event_3d": null,
+    "event_5d": null,
+    "large_order": null,
+    "divergences_count": 0,
+    "divergences": [],
+    "latest_price": 4529.11,
+    "latest_date": "2026-09-23",
+    "kline_count": 124,
+    "fund_flow_count": 0,
+    "dragon_tiger_count": 0,
+    "block_trade_count": 0
+  },
+  "588710": {
+    "info": {
+      "code": "588710",
+      "name": "科创半导体设备ETF",
+      "type": "etf",
+      "cap_group": "ETF"
+    },
+    "summary": {
+      "5日": {
+        "main_net": -411235648.0,
+        "super_net": -424809312.0,
+        "large_net": 13573664.0,
+        "mid_net": 230300970.0,
+        "small_net": 180934657.0,
+        "large_ratio": -36.779855119948685,
+        "days": 5
+      },
+      "20日": {
+        "main_net": -626903791.0,
+        "super_net": -410987569.0,
+        "large_net": -215916222.0,
+        "mid_net": 134918489.0,
+        "small_net": 491985264.0,
+        "large_ratio": -15.75631295808146,
+        "days": 20
+      },
+      "60日": {
+        "main_net": -4708719144.0,
+        "super_net": -3979386986.0,
+        "large_net": -729332158.0,
+        "mid_net": 1000193023.0,
+        "small_net": 3708526013.0,
+        "large_ratio": -24.3821798459297,
+        "days": 60
+      }
+    },
+    "event_3d": {
+      "n_events": 4,
+      "results": {
+        "5": {
+          "sample": 4,
+          "avg_return": 5.0496657277913855,
+          "median_return": 4.652471025934424,
+          "win_rate": 100.0,
+          "max_return": 9.006928406466507,
+          "min_return": 1.8867924528301883,
+          "avg_max_drawdown": -3.3350420577615756,
+          "returns": [
+            1.8867924528301883,
+            5.62700964630225,
+            9.006928406466507,
+            3.6779324055665974
+          ]
+        },
+        "10": {
+          "sample": 4,
+          "avg_return": 13.380576619257534,
+          "median_return": 12.589141429461769,
+          "win_rate": 100.0,
+          "max_return": 23.672055427251728,
+          "min_return": 4.671968190854869,
+          "avg_max_drawdown": -4.418179369376957,
+          "returns": [
+            6.68953687821614,
+            18.4887459807074,
+            23.672055427251728,
+            4.671968190854869
+          ]
+        }
+      }
+    },
+    "event_5d": {
+      "n_events": 1,
+      "results": {
+        "5": {
+          "sample": 1,
+          "avg_return": 11.650485436893199,
+          "median_return": 11.650485436893199,
+          "win_rate": 100.0,
+          "max_return": 11.650485436893199,
+          "min_return": 11.650485436893199,
+          "avg_max_drawdown": -0.455927051671734,
+          "returns": [
+            11.650485436893199
+          ]
+        },
+        "10": {
+          "sample": 1,
+          "avg_return": 29.449838187702284,
+          "median_return": 29.449838187702284,
+          "win_rate": 100.0,
+          "max_return": 29.449838187702284,
+          "min_return": 29.449838187702284,
+          "avg_max_drawdown": -1.8413597733711096,
+          "returns": [
+            29.449838187702284
+          ]
+        }
+      }
+    },
+    "large_order": {
+      "n_events": 39,
+      "threshold": 20,
+      "avg_next_return": 1.664782173173963,
+      "median_next_return": 2.3188405797101463,
+      "win_rate": 69.23076923076923,
+      "max_next_return": 8.436213991769549,
+      "min_next_return": -8.22596630327055
+    },
+    "divergences_count": 42,
+    "divergences": [
+      {
+        "date": "2026-08-31",
+        "type": "价涨资金流出",
+        "price_change": 3.273809523809512,
+        "fund_flow": -99067399.0,
+        "future_5d_return": -7.204610951008639
+      },
+      {
+        "date": "2026-09-10",
+        "type": "价涨资金流出",
+        "price_change": 1.0718113612004254,
+        "fund_flow": -20242530.0,
+        "future_5d_return": 7.317073170731714
+      },
+      {
+        "date": "2026-09-11",
+        "type": "价跌资金流入",
+        "price_change": -4.140786749482395,
+        "fund_flow": 47477481.0,
+        "future_5d_return": 13.822894168466515
+      },
+      {
+        "date": "2026-09-21",
+        "type": "价涨资金流出",
+        "price_change": 9.758656873032546,
+        "fund_flow": -75726800.0,
+        "future_5d_return": null
+      },
+      {
+        "date": "2026-09-22",
+        "type": "价涨资金流出",
+        "price_change": 2.079207920792081,
+        "fund_flow": -411235648.0,
+        "future_5d_return": null
+      }
+    ],
+    "latest_price": 1.031,
+    "latest_date": "2026-09-22",
+    "kline_count": 123,
+    "fund_flow_count": 120,
+    "dragon_tiger_count": 0,
+    "block_trade_count": 0,
+    "rolling_corr": {
+      "same_day_latest": 0.7335221157167588,
+      "same_day_mean": 0.560543987579662,
+      "next_day_latest": 0.18853748354814956,
+      "next_day_mean": 0.14379542007354545,
+      "sample_size": 100
+    }
+  },
+  "688981": {
+    "info": {
+      "code": "688981",
+      "name": "中芯国际",
+      "type": "stock",
+      "cap_group": "大盘"
+    },
+    "summary": {
+      "5日": {
+        "main_net": 244892672.0,
+        "super_net": 218730080.0,
+        "large_net": 26162592.0,
+        "mid_net": -187197296.0,
+        "small_net": -57695376.0,
+        "large_ratio": 11.019645070163104,
+        "days": 5
+      },
+      "20日": {
+        "main_net": -1123786622.0,
+        "super_net": -1244359918.0,
+        "large_net": 120573296.0,
+        "mid_net": 186771312.0,
+        "small_net": 937015264.0,
+        "large_ratio": -10.458868805893765,
+        "days": 20
+      },
+      "60日": {
+        "main_net": -10116766782.0,
+        "super_net": -11487329214.0,
+        "large_net": 1370562432.0,
+        "mid_net": 4186601040.0,
+        "small_net": 5930165920.0,
+        "large_ratio": -14.264785768259616,
+        "days": 60
+      }
+    },
+    "event_3d": {
+      "n_events": 3,
+      "results": {
+        "5": {
+          "sample": 3,
+          "avg_return": -1.434990718803338,
+          "median_return": -1.9472809308952677,
+          "win_rate": 33.33333333333333,
+          "max_return": 3.7159145545710537,
+          "min_return": -6.0736057800858,
+          "avg_max_drawdown": -6.22921409801673,
+          "returns": [
+            3.7159145545710537,
+            -6.0736057800858,
+            -1.9472809308952677
+          ]
+        },
+        "10": {
+          "sample": 3,
+          "avg_return": -4.006512578068696,
+          "median_return": -5.260781214721167,
+          "win_rate": 0.0,
+          "max_return": -1.0989765780616723,
+          "min_return": -5.659779941423249,
+          "avg_max_drawdown": -10.43559872326493,
+          "returns": [
+            -1.0989765780616723,
+            -5.260781214721167,
+            -5.659779941423249
+          ]
+        }
+      }
+    },
+    "event_5d": {
+      "n_events": 0,
+      "results": {}
+    },
+    "large_order": {
+      "n_events": 34,
+      "threshold": 20,
+      "avg_next_return": 0.15242977120635762,
+      "median_next_return": 0.14383510265894017,
+      "win_rate": 52.94117647058824,
+      "max_next_return": 6.937191249117869,
+      "min_next_return": -8.97202342225113
+    },
+    "divergences_count": 25,
+    "divergences": [
+      {
+        "date": "2026-08-18",
+        "type": "价涨资金流出",
+        "price_change": 5.486089402938421,
+        "fund_flow": -263632832.0,
+        "future_5d_return": -11.09794043562009
+      },
+      {
+        "date": "2026-08-27",
+        "type": "价涨资金流出",
+        "price_change": 1.2259615384615286,
+        "fund_flow": -199018480.0,
+        "future_5d_return": -1.9472809308952677
+      },
+      {
+        "date": "2026-08-28",
+        "type": "价涨资金流出",
+        "price_change": 4.395422126389126,
+        "fund_flow": -360170080.0,
+        "future_5d_return": -3.765490943755956
+      },
+      {
+        "date": "2026-09-16",
+        "type": "价涨资金流出",
+        "price_change": 1.4431951669743315,
+        "fund_flow": -469007038.0,
+        "future_5d_return": null
+      },
+      {
+        "date": "2026-09-17",
+        "type": "价涨资金流出",
+        "price_change": 1.0305766118729354,
+        "fund_flow": -515956704.0,
+        "future_5d_return": null
+      }
+    ],
+    "latest_price": 121.46,
+    "latest_date": "2026-09-23",
+    "kline_count": 124,
+    "fund_flow_count": 120,
+    "dragon_tiger_count": 0,
+    "block_trade_count": 0,
+    "rolling_corr": {
+      "same_day_latest": 0.8572773755336773,
+      "same_day_mean": 0.8612700301642727,
+      "next_day_latest": -0.2664396430602613,
+      "next_day_mean": 0.05093329017996321,
+      "sample_size": 101
+    }
+  },
+  "300750": {
+    "info": {
+      "code": "300750",
+      "name": "宁德时代",
+      "type": "stock",
+      "cap_group": "大盘"
+    },
+    "summary": {
+      "5日": {
+        "main_net": -3501822880.0,
+        "super_net": -102402416.0,
+        "large_net": -3399420464.0,
+        "mid_net": 390458064.0,
+        "small_net": 3111364768.0,
+        "large_ratio": -33.10352809708902,
+        "days": 5
+      },
+      "20日": {
+        "main_net": -9947347616.0,
+        "super_net": -4080097856.0,
+        "large_net": -5867249760.0,
+        "mid_net": 1044544656.0,
+        "small_net": 8902803248.0,
+        "large_ratio": -24.519171104731818,
+        "days": 20
+      },
+      "60日": {
+        "main_net": -10807973392.0,
+        "super_net": -8190055648.0,
+        "large_net": -2617917744.0,
+        "mid_net": -4040976352.0,
+        "small_net": 14848950581.0,
+        "large_ratio": -10.344416053826391,
+        "days": 60
+      }
+    },
+    "event_3d": {
+      "n_events": 5,
+      "results": {
+        "5": {
+          "sample": 5,
+          "avg_return": -1.0270484050880888,
+          "median_return": -1.4049242595296607,
+          "win_rate": 40.0,
+          "max_return": 3.9788677387438964,
+          "min_return": -7.951665710956135,
+          "avg_max_drawdown": -4.642790086488376,
+          "returns": [
+            3.9788677387438964,
+            -7.951665710956135,
+            -2.031691401742719,
+            2.274171608044173,
+            -1.4049242595296607
+          ]
+        },
+        "10": {
+          "sample": 5,
+          "avg_return": -1.7637401251346851,
+          "median_return": -1.186157481974326,
+          "win_rate": 40.0,
+          "max_return": 3.3876228341535253,
+          "min_return": -7.019847949538482,
+          "avg_max_drawdown": -6.10125434172985,
+          "returns": [
+            0.8961328529972779,
+            -7.019847949538482,
+            -4.89645088131142,
+            3.3876228341535253,
+            -1.186157481974326
+          ]
+        }
+      }
+    },
+    "event_5d": {
+      "n_events": 1,
+      "results": {
+        "5": {
+          "sample": 1,
+          "avg_return": -1.8340842592758921,
+          "median_return": -1.8340842592758921,
+          "win_rate": 0.0,
+          "max_return": -1.8340842592758921,
+          "min_return": -1.8340842592758921,
+          "avg_max_drawdown": -4.81968802168411,
+          "returns": [
+            -1.8340842592758921
+          ]
+        },
+        "10": {
+          "sample": 1,
+          "avg_return": -2.4847870182555853,
+          "median_return": -2.4847870182555853,
+          "win_rate": 0.0,
+          "max_return": -2.4847870182555853,
+          "min_return": -2.4847870182555853,
+          "avg_max_drawdown": -4.81968802168411,
+          "returns": [
+            -2.4847870182555853
+          ]
+        }
+      }
+    },
+    "large_order": {
+      "n_events": 44,
+      "threshold": 20,
+      "avg_next_return": -0.41262450296704734,
+      "median_next_return": -0.9055239239733892,
+      "win_rate": 36.36363636363637,
+      "max_next_return": 5.436582665392309,
+      "min_next_return": -6.15526089407018
+    },
+    "divergences_count": 29,
+    "divergences": [
+      {
+        "date": "2026-08-12",
+        "type": "价涨资金流出",
+        "price_change": 1.8965436965530102,
+        "fund_flow": -2322195392.0,
+        "future_5d_return": -1.2514913817175621
+      },
+      {
+        "date": "2026-08-19",
+        "type": "价跌资金流入",
+        "price_change": -1.8420388594499126,
+        "fund_flow": 557024416.0,
+        "future_5d_return": -2.570694087403602
+      },
+      {
+        "date": "2026-08-21",
+        "type": "价跌资金流入",
+        "price_change": -2.2076103805190317,
+        "fund_flow": 490091904.0,
+        "future_5d_return": -5.790617410200682
+      },
+      {
+        "date": "2026-09-09",
+        "type": "价跌资金流入",
+        "price_change": -3.6223175965665266,
+        "fund_flow": 298432800.0,
+        "future_5d_return": -9.310058187863657
+      },
+      {
+        "date": "2026-09-10",
+        "type": "价跌资金流入",
+        "price_change": -3.6866096866096876,
+        "fund_flow": 237912736.0,
+        "future_5d_return": -9.986392947997391
+      }
+    ],
+    "latest_price": 304.63,
+    "latest_date": "2026-09-22",
+    "kline_count": 123,
+    "fund_flow_count": 120,
+    "dragon_tiger_count": 0,
+    "block_trade_count": 0,
+    "rolling_corr": {
+      "same_day_latest": 0.8612798847775016,
+      "same_day_mean": 0.8090563567941154,
+      "next_day_latest": 0.0676362463109313,
+      "next_day_mean": -0.2115247954948685,
+      "sample_size": 100
+    }
+  },
+  "603893": {
+    "info": {
+      "code": "603893",
+      "name": "瑞芯微",
+      "type": "stock",
+      "cap_group": "中盘"
+    },
+    "summary": {
+      "5日": {
+        "main_net": 1265765471.0,
+        "super_net": 1304380847.0,
+        "large_net": -38615376.0,
+        "mid_net": -675711472.0,
+        "small_net": -590053968.0,
+        "large_ratio": 39.59276270085121,
+        "days": 5
+      },
+      "20日": {
+        "main_net": 1462016728.0,
+        "super_net": 1981557049.0,
+        "large_net": -519540321.0,
+        "mid_net": -1213480048.0,
+        "small_net": -248536640.0,
+        "large_ratio": 14.115202330571735,
+        "days": 20
+      },
+      "60日": {
+        "main_net": 1723828614.0,
+        "super_net": 2959174809.0,
+        "large_net": -1235346195.0,
+        "mid_net": -3237476960.0,
+        "small_net": 1513648336.0,
+        "large_ratio": 4.900932391169271,
+        "days": 60
+      }
+    },
+    "event_3d": {
+      "n_events": 4,
+      "results": {
+        "5": {
+          "sample": 3,
+          "avg_return": -0.5960873069345233,
+          "median_return": 2.646184340931601,
+          "win_rate": 66.66666666666666,
+          "max_return": 6.902635351196396,
+          "min_return": -11.337081612931566,
+          "avg_max_drawdown": -6.694135307439335,
+          "returns": [
+            -11.337081612931566,
+            2.646184340931601,
+            6.902635351196396
+          ]
+        },
+        "10": {
+          "sample": 3,
+          "avg_return": -7.299981056226372,
+          "median_return": -9.489593657086226,
+          "win_rate": 33.33333333333333,
+          "max_return": 0.7057007387804681,
+          "min_return": -13.116050250373357,
+          "avg_max_drawdown": -14.921304253264305,
+          "returns": [
+            -13.116050250373357,
+            -9.489593657086226,
+            0.7057007387804681
+          ]
+        }
+      }
+    },
+    "event_5d": {
+      "n_events": 1,
+      "results": {}
+    },
+    "large_order": {
+      "n_events": 38,
+      "threshold": 20,
+      "avg_next_return": 1.2793079940177017,
+      "median_next_return": 0.6002697303450932,
+      "win_rate": 60.526315789473685,
+      "max_next_return": 10.06043026347594,
+      "min_next_return": -8.523985239852404
+    },
+    "divergences_count": 34,
+    "divergences": [
+      {
+        "date": "2026-08-13",
+        "type": "价涨资金流出",
+        "price_change": 1.479521849892218,
+        "fund_flow": -264396992.0,
+        "future_5d_return": -11.822921695471656
+      },
+      {
+        "date": "2026-08-26",
+        "type": "价跌资金流入",
+        "price_change": -3.54229400492746,
+        "fund_flow": 151411745.0,
+        "future_5d_return": 12.095584061755016
+      },
+      {
+        "date": "2026-09-03",
+        "type": "价涨资金流出",
+        "price_change": 9.609949123798756,
+        "fund_flow": -59489596.0,
+        "future_5d_return": -5.7968024755028384
+      },
+      {
+        "date": "2026-09-04",
+        "type": "价跌资金流入",
+        "price_change": -2.8727067166863685,
+        "fund_flow": 17765774.0,
+        "future_5d_return": -4.6031746031745975
+      },
+      {
+        "date": "2026-09-10",
+        "type": "价跌资金流入",
+        "price_change": -3.3544973544973544,
+        "fund_flow": 13356561.0,
+        "future_5d_return": -0.7938245921383924
+      }
+    ],
+    "latest_price": 217.8,
+    "latest_date": "2026-09-22",
+    "kline_count": 123,
+    "fund_flow_count": 120,
+    "dragon_tiger_count": 0,
+    "block_trade_count": 0,
+    "rolling_corr": {
+      "same_day_latest": 0.7166394837592382,
+      "same_day_mean": 0.8022282182619045,
+      "next_day_latest": 0.31005308244299107,
+      "next_day_mean": -0.03507399997697589,
+      "sample_size": 100
+    }
+  },
+  "300165": {
+    "info": {
+      "code": "300165",
+      "name": "新天科技",
+      "type": "stock",
+      "cap_group": "中盘"
+    },
+    "summary": {
+      "5日": {
+        "main_net": -31158702.0,
+        "super_net": 988527.0,
+        "large_net": -32147229.0,
+        "mid_net": 15687489.0,
+        "small_net": 15471213.0,
+        "large_ratio": -40.98447386633748,
+        "days": 5
+      },
+      "20日": {
+        "main_net": -69880223.0,
+        "super_net": 4349042.0,
+        "large_net": -74229265.0,
+        "mid_net": 65498547.0,
+        "small_net": 4381677.0,
+        "large_ratio": -27.1628452426747,
+        "days": 20
+      },
+      "60日": {
+        "main_net": -64484467.0,
+        "super_net": 3934891.0,
+        "large_net": -68419358.0,
+        "mid_net": 96436484.0,
+        "small_net": -31952015.0,
+        "large_ratio": -7.7527187861955085,
+        "days": 60
+      }
+    },
+    "event_3d": {
+      "n_events": 3,
+      "results": {
+        "5": {
+          "sample": 3,
+          "avg_return": 2.727395129562378,
+          "median_return": 5.394190871369298,
+          "win_rate": 66.66666666666666,
+          "max_return": 7.797270955165692,
+          "min_return": -5.009276437847854,
+          "avg_max_drawdown": -3.712884687694355,
+          "returns": [
+            5.394190871369298,
+            -5.009276437847854,
+            7.797270955165692
+          ]
+        },
+        "10": {
+          "sample": 3,
+          "avg_return": 4.9416420447733165,
+          "median_return": 3.1189083820662766,
+          "win_rate": 66.66666666666666,
+          "max_return": 12.448132780082988,
+          "min_return": -0.7421150278293154,
+          "avg_max_drawdown": -5.889499869539676,
+          "returns": [
+            12.448132780082988,
+            -0.7421150278293154,
+            3.1189083820662766
+          ]
+        }
+      }
+    },
+    "event_5d": {
+      "n_events": 1,
+      "results": {
+        "5": {
+          "sample": 1,
+          "avg_return": 3.809523809523818,
+          "median_return": 3.809523809523818,
+          "win_rate": 100.0,
+          "max_return": 3.809523809523818,
+          "min_return": 3.809523809523818,
+          "avg_max_drawdown": -1.446654611211573,
+          "returns": [
+            3.809523809523818
+          ]
+        },
+        "10": {
+          "sample": 1,
+          "avg_return": -0.5714285714285783,
+          "median_return": -0.5714285714285783,
+          "win_rate": 0.0,
+          "max_return": -0.5714285714285783,
+          "min_return": -0.5714285714285783,
+          "avg_max_drawdown": -5.605786618444853,
+          "returns": [
+            -0.5714285714285783
+          ]
+        }
+      }
+    },
+    "large_order": {
+      "n_events": 25,
+      "threshold": 20,
+      "avg_next_return": 1.4830665167393813,
+      "median_next_return": 1.1811023622047223,
+      "win_rate": 60.0,
+      "max_next_return": 19.955654101995577,
+      "min_next_return": -6.6115702479338845
+    },
+    "divergences_count": 41,
+    "divergences": [
+      {
+        "date": "2026-09-01",
+        "type": "价涨资金流出",
+        "price_change": 4.571428571428582,
+        "fund_flow": -2031288.0,
+        "future_5d_return": -3.460837887067403
+      },
+      {
+        "date": "2026-09-02",
+        "type": "价涨资金流出",
+        "price_change": 3.6121673003802313,
+        "fund_flow": -3694797.0,
+        "future_5d_return": -4.220183486238538
+      },
+      {
+        "date": "2026-09-17",
+        "type": "价涨资金流出",
+        "price_change": 2.200000000000002,
+        "fund_flow": -11449302.0,
+        "future_5d_return": null
+      },
+      {
+        "date": "2026-09-21",
+        "type": "价涨资金流出",
+        "price_change": 4.508196721311464,
+        "fund_flow": -31199846.0,
+        "future_5d_return": null
+      },
+      {
+        "date": "2026-09-22",
+        "type": "价涨资金流出",
+        "price_change": 0.5940594059405946,
+        "fund_flow": -31158702.0,
+        "future_5d_return": null
+      }
+    ],
+    "latest_price": 5.08,
+    "latest_date": "2026-09-22",
+    "kline_count": 122,
+    "fund_flow_count": 120,
+    "dragon_tiger_count": 0,
+    "block_trade_count": 0,
+    "rolling_corr": {
+      "same_day_latest": 0.26424246266649554,
+      "same_day_mean": 0.4308114789402515,
+      "next_day_latest": 0.03608003358287992,
+      "next_day_mean": 0.021070694298587257,
+      "sample_size": 100
+    }
+  },
+  "002222": {
+    "info": {
+      "code": "002222",
+      "name": "福晶科技",
+      "type": "stock",
+      "cap_group": "小盘"
+    },
+    "summary": {
+      "5日": {
+        "main_net": 381783060.0,
+        "super_net": 290667860.0,
+        "large_net": 91115200.0,
+        "mid_net": 38047344.0,
+        "small_net": -419830352.0,
+        "large_ratio": 20.022128821891837,
+        "days": 5
+      },
+      "20日": {
+        "main_net": 161922639.0,
+        "super_net": 112178057.0,
+        "large_net": 49744582.0,
+        "mid_net": 186341952.0,
+        "small_net": -348264512.0,
+        "large_ratio": 3.5679067523976467,
+        "days": 20
+      },
+      "60日": {
+        "main_net": -1778962195.0,
+        "super_net": -425062144.0,
+        "large_net": -1353900051.0,
+        "mid_net": -644451271.0,
+        "small_net": 2423413664.0,
+        "large_ratio": -10.459792156469753,
+        "days": 60
+      }
+    },
+    "event_3d": {
+      "n_events": 5,
+      "results": {
+        "5": {
+          "sample": 4,
+          "avg_return": 9.503041976077064,
+          "median_return": 7.260228695445036,
+          "win_rate": 75.0,
+          "max_return": 25.561797752808978,
+          "min_return": -2.0700872393907943,
+          "avg_max_drawdown": -2.4599487731637533,
+          "returns": [
+            7.56831633295556,
+            25.561797752808978,
+            6.952141057934513,
+            -2.0700872393907943
+          ]
+        },
+        "10": {
+          "sample": 4,
+          "avg_return": 9.98864166097593,
+          "median_return": 11.732643341337766,
+          "win_rate": 75.0,
+          "max_return": 17.642614280317346,
+          "min_return": -1.153334319089161,
+          "avg_max_drawdown": -7.980037550446632,
+          "returns": [
+            17.642614280317346,
+            16.681071737251507,
+            6.7842149454240275,
+            -1.153334319089161
+          ]
+        }
+      }
+    },
+    "event_5d": {
+      "n_events": 2,
+      "results": {
+        "5": {
+          "sample": 2,
+          "avg_return": 1.2649506537500632,
+          "median_return": 1.2649506537500632,
+          "win_rate": 50.0,
+          "max_return": 4.767741144748139,
+          "min_return": -2.2378398372480124,
+          "avg_max_drawdown": -6.162717728972488,
+          "returns": [
+            4.767741144748139,
+            -2.2378398372480124
+          ]
+        },
+        "10": {
+          "sample": 2,
+          "avg_return": 5.201605831464174,
+          "median_return": 5.201605831464174,
+          "win_rate": 50.0,
+          "max_return": 12.881480573599703,
+          "min_return": -2.478268910671355,
+          "avg_max_drawdown": -9.896639993116501,
+          "returns": [
+            12.881480573599703,
+            -2.478268910671355
+          ]
+        }
+      }
+    },
+    "large_order": {
+      "n_events": 40,
+      "threshold": 20,
+      "avg_next_return": 1.2054045347921882,
+      "median_next_return": 1.7037128211994657,
+      "win_rate": 60.0,
+      "max_next_return": 10.010172939979656,
+      "min_next_return": -7.057876375346628
+    },
+    "divergences_count": 22,
+    "divergences": [
+      {
+        "date": "2026-09-07",
+        "type": "价涨资金流出",
+        "price_change": 1.0954848260547934,
+        "fund_flow": -131568322.0,
+        "future_5d_return": -5.447356860448105
+      },
+      {
+        "date": "2026-09-09",
+        "type": "价涨资金流出",
+        "price_change": 0.4227691378529297,
+        "fund_flow": -23200396.0,
+        "future_5d_return": 3.1273492707863504
+      },
+      {
+        "date": "2026-09-11",
+        "type": "价跌资金流入",
+        "price_change": -4.93483672572852,
+        "fund_flow": 12954870.0,
+        "future_5d_return": 7.362908194701179
+      },
+      {
+        "date": "2026-09-16",
+        "type": "价涨资金流出",
+        "price_change": 2.6028421839940252,
+        "fund_flow": -51556913.0,
+        "future_5d_return": null
+      },
+      {
+        "date": "2026-09-17",
+        "type": "价涨资金流出",
+        "price_change": 5.822550831792972,
+        "fund_flow": -249104420.0,
+        "future_5d_return": null
+      }
+    ],
+    "latest_price": 71.15,
+    "latest_date": "2026-09-22",
+    "kline_count": 123,
+    "fund_flow_count": 120,
+    "dragon_tiger_count": 1,
+    "block_trade_count": 0,
+    "rolling_corr": {
+      "same_day_latest": 0.7387227130857004,
+      "same_day_mean": 0.764322128280994,
+      "next_day_latest": -0.2791141182654468,
+      "next_day_mean": -0.02504513858180318,
+      "sample_size": 100
+    }
+  },
+  "300322": {
+    "info": {
+      "code": "300322",
+      "name": "硕贝德",
+      "type": "stock",
+      "cap_group": "小盘"
+    },
+    "summary": {
+      "5日": {
+        "main_net": -62690863.0,
+        "super_net": 14191101.0,
+        "large_net": -76881964.0,
+        "mid_net": -78042050.0,
+        "small_net": 140732900.0,
+        "large_ratio": -10.50554262637132,
+        "days": 5
+      },
+      "20日": {
+        "main_net": -56882146.0,
+        "super_net": -520518.0,
+        "large_net": -56361628.0,
+        "mid_net": 25287109.0,
+        "small_net": 31595023.0,
+        "large_ratio": -3.8764054692049528,
+        "days": 20
+      },
+      "60日": {
+        "main_net": -344934146.0,
+        "super_net": -152203744.0,
+        "large_net": -192730402.0,
+        "mid_net": 60140080.0,
+        "small_net": 284794081.0,
+        "large_ratio": -8.40566148986029,
+        "days": 60
+      }
+    },
+    "event_3d": {
+      "n_events": 8,
+      "results": {
+        "5": {
+          "sample": 8,
+          "avg_return": -2.60854993376374,
+          "median_return": -5.148205009073431,
+          "win_rate": 37.5,
+          "max_return": 20.510894064613062,
+          "min_return": -15.26395173453997,
+          "avg_max_drawdown": -9.898888150328677,
+          "returns": [
+            20.510894064613062,
+            1.2414649286157653,
+            -6.429006703229733,
+            -15.26395173453997,
+            -12.50000000000001,
+            -3.8674033149171283,
+            3.1968592260235518,
+            -7.757255936675456
+          ]
+        },
+        "10": {
+          "sample": 8,
+          "avg_return": -4.7390375309394255,
+          "median_return": -5.7820784690354685,
+          "win_rate": 12.5,
+          "max_return": 16.22839969947407,
+          "min_return": -15.143288084464556,
+          "avg_max_drawdown": -14.431168409288954,
+          "returns": [
+            16.22839969947407,
+            -9.807572936064556,
+            -1.8890920170627545,
+            -15.143288084464556,
+            -2.753164556962029,
+            -12.983425414364646,
+            -2.8042624789680337,
+            -8.759894459102902
+          ]
+        }
+      }
+    },
+    "event_5d": {
+      "n_events": 2,
+      "results": {
+        "5": {
+          "sample": 2,
+          "avg_return": 0.49746367044870565,
+          "median_return": 0.49746367044870565,
+          "win_rate": 100.0,
+          "max_return": 0.6261180679785427,
+          "min_return": 0.36880927291886856,
+          "avg_max_drawdown": -9.23391411604218,
+          "returns": [
+            0.6261180679785427,
+            0.36880927291886856
+          ]
+        },
+        "10": {
+          "sample": 2,
+          "avg_return": -10.902337017341797,
+          "median_return": -10.902337017341797,
+          "win_rate": 0.0,
+          "max_return": -7.165437302423605,
+          "min_return": -14.639236732259986,
+          "avg_max_drawdown": -14.53939568455246,
+          "returns": [
+            -14.639236732259986,
+            -7.165437302423605
+          ]
+        }
+      }
+    },
+    "large_order": {
+      "n_events": 38,
+      "threshold": 20,
+      "avg_next_return": -0.5932538322626341,
+      "median_next_return": -0.5619226495898133,
+      "win_rate": 47.368421052631575,
+      "max_next_return": 12.532078699743376,
+      "min_next_return": -15.229629629629626
+    },
+    "divergences_count": 35,
+    "divergences": [
+      {
+        "date": "2026-09-04",
+        "type": "价跌资金流入",
+        "price_change": -0.9988901220865709,
+        "fund_flow": 98750752.0,
+        "future_5d_return": -2.130044843049317
+      },
+      {
+        "date": "2026-09-09",
+        "type": "价跌资金流入",
+        "price_change": -5.4881266490765075,
+        "fund_flow": 63885445.0,
+        "future_5d_return": -1.5075376884422065
+      },
+      {
+        "date": "2026-09-16",
+        "type": "价涨资金流出",
+        "price_change": 0.9153318077803174,
+        "fund_flow": -98988768.0,
+        "future_5d_return": null
+      },
+      {
+        "date": "2026-09-21",
+        "type": "价涨资金流出",
+        "price_change": 12.17239370995924,
+        "fund_flow": -22607132.0,
+        "future_5d_return": null
+      },
+      {
+        "date": "2026-09-22",
+        "type": "价涨资金流出",
+        "price_change": 6.689342403628107,
+        "fund_flow": -62690863.0,
+        "future_5d_return": null
+      }
+    ],
+    "latest_price": 18.82,
+    "latest_date": "2026-09-22",
+    "kline_count": 123,
+    "fund_flow_count": 120,
+    "dragon_tiger_count": 0,
+    "block_trade_count": 0,
+    "rolling_corr": {
+      "same_day_latest": 0.616220932503239,
+      "same_day_mean": 0.6177976305584911,
+      "next_day_latest": -0.1259473065227276,
+      "next_day_mean": -0.158221740900223,
+      "sample_size": 100
+    }
+  }
+}

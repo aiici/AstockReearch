@@ -1,0 +1,631 @@
+{
+  "signal_ranking": [
+    {
+      "code": "588710",
+      "name": "科创半导体设备ETF",
+      "cap_group": "ETF",
+      "triggers": 4,
+      "win_rate_5d": 100.0,
+      "avg_return_5d": 5.05,
+      "max_drawdown_5d": -3.34,
+      "win_rate_10d": 100.0,
+      "avg_return_10d": 13.38
+    },
+    {
+      "code": "002222",
+      "name": "福晶科技",
+      "cap_group": "小盘",
+      "triggers": 5,
+      "win_rate_5d": 75.0,
+      "avg_return_5d": 9.5,
+      "max_drawdown_5d": -2.46,
+      "win_rate_10d": 75.0,
+      "avg_return_10d": 9.99
+    },
+    {
+      "code": "603893",
+      "name": "瑞芯微",
+      "cap_group": "中盘",
+      "triggers": 4,
+      "win_rate_5d": 66.7,
+      "avg_return_5d": -0.6,
+      "max_drawdown_5d": -6.69,
+      "win_rate_10d": 33.3,
+      "avg_return_10d": -7.3
+    },
+    {
+      "code": "300165",
+      "name": "新天科技",
+      "cap_group": "中盘",
+      "triggers": 3,
+      "win_rate_5d": 66.7,
+      "avg_return_5d": 2.73,
+      "max_drawdown_5d": -3.71,
+      "win_rate_10d": 66.7,
+      "avg_return_10d": 4.94
+    },
+    {
+      "code": "300750",
+      "name": "宁德时代",
+      "cap_group": "大盘",
+      "triggers": 5,
+      "win_rate_5d": 40.0,
+      "avg_return_5d": -1.03,
+      "max_drawdown_5d": -4.64,
+      "win_rate_10d": 40.0,
+      "avg_return_10d": -1.76
+    },
+    {
+      "code": "300322",
+      "name": "硕贝德",
+      "cap_group": "小盘",
+      "triggers": 8,
+      "win_rate_5d": 37.5,
+      "avg_return_5d": -2.61,
+      "max_drawdown_5d": -9.9,
+      "win_rate_10d": 12.5,
+      "avg_return_10d": -4.74
+    },
+    {
+      "code": "688981",
+      "name": "中芯国际",
+      "cap_group": "大盘",
+      "triggers": 3,
+      "win_rate_5d": 33.3,
+      "avg_return_5d": -1.43,
+      "max_drawdown_5d": -6.23,
+      "win_rate_10d": 0.0,
+      "avg_return_10d": -4.01
+    }
+  ],
+  "corr_vs_win": {
+    "data": [
+      {
+        "code": "588710",
+        "name": "科创半导体设备ETF",
+        "corr_mean": 0.561,
+        "win_rate_5d": 100.0,
+        "avg_return_5d": 5.05,
+        "triggers": 4
+      },
+      {
+        "code": "688981",
+        "name": "中芯国际",
+        "corr_mean": 0.861,
+        "win_rate_5d": 33.3,
+        "avg_return_5d": -1.43,
+        "triggers": 3
+      },
+      {
+        "code": "300750",
+        "name": "宁德时代",
+        "corr_mean": 0.809,
+        "win_rate_5d": 40.0,
+        "avg_return_5d": -1.03,
+        "triggers": 5
+      },
+      {
+        "code": "603893",
+        "name": "瑞芯微",
+        "corr_mean": 0.802,
+        "win_rate_5d": 66.7,
+        "avg_return_5d": -0.6,
+        "triggers": 4
+      },
+      {
+        "code": "300165",
+        "name": "新天科技",
+        "corr_mean": 0.431,
+        "win_rate_5d": 66.7,
+        "avg_return_5d": 2.73,
+        "triggers": 3
+      },
+      {
+        "code": "002222",
+        "name": "福晶科技",
+        "corr_mean": 0.764,
+        "win_rate_5d": 75.0,
+        "avg_return_5d": 9.5,
+        "triggers": 5
+      },
+      {
+        "code": "300322",
+        "name": "硕贝德",
+        "corr_mean": 0.618,
+        "win_rate_5d": 37.5,
+        "avg_return_5d": -2.61,
+        "triggers": 8
+      }
+    ],
+    "high_corr_group": {
+      "count": 4,
+      "avg_win_rate": 53.8,
+      "avg_return": 1.61
+    },
+    "low_corr_group": {
+      "count": 3,
+      "avg_win_rate": 68.1,
+      "avg_return": 1.72
+    },
+    "conclusion": "当日相关系数≥0.7的标的（4只），3日连续流入信号5日平均胜率53.8%、平均收益1.61%；相关系数<0.7的标的（3只），平均胜率68.1%、平均收益1.72%。相关性对信号效果影响不显著。"
+  },
+  "cap_group_effectiveness": {
+    "大盘": {
+      "count": 2,
+      "stocks": [
+        "中芯国际",
+        "宁德时代"
+      ],
+      "avg_win_rate_5d": 36.6,
+      "avg_return_5d": -1.23,
+      "avg_lo_win_rate": 44.6,
+      "avg_reversal_prob": 41.1,
+      "total_triggers_3d": 8,
+      "total_lo_triggers": 78,
+      "items": [
+        {
+          "name": "中芯国际",
+          "code": "688981",
+          "win_rate_5d": 33.3,
+          "avg_return_5d": -1.43,
+          "triggers_3d": 3,
+          "large_order_win_rate": 52.9,
+          "large_order_triggers": 34,
+          "divergence_count": 25,
+          "reversal_prob": 47.8
+        },
+        {
+          "name": "宁德时代",
+          "code": "300750",
+          "win_rate_5d": 40.0,
+          "avg_return_5d": -1.03,
+          "triggers_3d": 5,
+          "large_order_win_rate": 36.4,
+          "large_order_triggers": 44,
+          "divergence_count": 29,
+          "reversal_prob": 34.5
+        }
+      ]
+    },
+    "中盘": {
+      "count": 2,
+      "stocks": [
+        "瑞芯微",
+        "新天科技"
+      ],
+      "avg_win_rate_5d": 66.7,
+      "avg_return_5d": 1.06,
+      "avg_lo_win_rate": 60.2,
+      "avg_reversal_prob": 45.3,
+      "total_triggers_3d": 7,
+      "total_lo_triggers": 63,
+      "items": [
+        {
+          "name": "瑞芯微",
+          "code": "603893",
+          "win_rate_5d": 66.7,
+          "avg_return_5d": -0.6,
+          "triggers_3d": 4,
+          "large_order_win_rate": 60.5,
+          "large_order_triggers": 38,
+          "divergence_count": 34,
+          "reversal_prob": 35.3
+        },
+        {
+          "name": "新天科技",
+          "code": "300165",
+          "win_rate_5d": 66.7,
+          "avg_return_5d": 2.73,
+          "triggers_3d": 3,
+          "large_order_win_rate": 60.0,
+          "large_order_triggers": 25,
+          "divergence_count": 41,
+          "reversal_prob": 55.3
+        }
+      ]
+    },
+    "小盘": {
+      "count": 2,
+      "stocks": [
+        "福晶科技",
+        "硕贝德"
+      ],
+      "avg_win_rate_5d": 56.2,
+      "avg_return_5d": 3.45,
+      "avg_lo_win_rate": 53.7,
+      "avg_reversal_prob": 57.5,
+      "total_triggers_3d": 13,
+      "total_lo_triggers": 78,
+      "items": [
+        {
+          "name": "福晶科技",
+          "code": "002222",
+          "win_rate_5d": 75.0,
+          "avg_return_5d": 9.5,
+          "triggers_3d": 5,
+          "large_order_win_rate": 60.0,
+          "large_order_triggers": 40,
+          "divergence_count": 22,
+          "reversal_prob": 65.0
+        },
+        {
+          "name": "硕贝德",
+          "code": "300322",
+          "win_rate_5d": 37.5,
+          "avg_return_5d": -2.61,
+          "triggers_3d": 8,
+          "large_order_win_rate": 47.4,
+          "large_order_triggers": 38,
+          "divergence_count": 35,
+          "reversal_prob": 50.0
+        }
+      ]
+    }
+  },
+  "threshold_optimization": {
+    "data": [
+      {
+        "threshold": 10,
+        "sample": 288,
+        "avg_next_return": -0.04,
+        "median_next_return": -0.38,
+        "win_rate": 46.9
+      },
+      {
+        "threshold": 15,
+        "sample": 277,
+        "avg_next_return": -0.07,
+        "median_next_return": -0.39,
+        "win_rate": 46.6
+      },
+      {
+        "threshold": 20,
+        "sample": 263,
+        "avg_next_return": -0.09,
+        "median_next_return": -0.39,
+        "win_rate": 46.4
+      },
+      {
+        "threshold": 25,
+        "sample": 243,
+        "avg_next_return": -0.07,
+        "median_next_return": -0.46,
+        "win_rate": 46.1
+      },
+      {
+        "threshold": 30,
+        "sample": 227,
+        "avg_next_return": -0.07,
+        "median_next_return": -0.46,
+        "win_rate": 45.4
+      },
+      {
+        "threshold": 35,
+        "sample": 207,
+        "avg_next_return": -0.07,
+        "median_next_return": -0.56,
+        "win_rate": 45.4
+      },
+      {
+        "threshold": 40,
+        "sample": 184,
+        "avg_next_return": -0.1,
+        "median_next_return": -0.64,
+        "win_rate": 44.6
+      }
+    ],
+    "best": {
+      "threshold": 10,
+      "sample": 288,
+      "avg_next_return": -0.04,
+      "median_next_return": -0.38,
+      "win_rate": 46.9
+    }
+  },
+  "flow_size_analysis": [
+    {
+      "bucket": "巨额流入(>5亿)",
+      "sample": 57,
+      "avg_return_5d": -0.48,
+      "win_rate": 43.9
+    },
+    {
+      "bucket": "大额流入(1-5亿)",
+      "sample": 94,
+      "avg_return_5d": -0.04,
+      "win_rate": 46.8
+    },
+    {
+      "bucket": "中等流入(0.2-1亿)",
+      "sample": 80,
+      "avg_return_5d": 0.64,
+      "win_rate": 55.0
+    },
+    {
+      "bucket": "小额流入(0-0.2亿)",
+      "sample": 77,
+      "avg_return_5d": 2.55,
+      "win_rate": 63.6
+    },
+    {
+      "bucket": "小额流出(0-0.2亿)",
+      "sample": 126,
+      "avg_return_5d": 2.38,
+      "win_rate": 57.1
+    },
+    {
+      "bucket": "中等流出(0.2-1亿)",
+      "sample": 123,
+      "avg_return_5d": 0.7,
+      "win_rate": 50.4
+    },
+    {
+      "bucket": "大额流出(1-5亿)",
+      "sample": 162,
+      "avg_return_5d": -0.12,
+      "win_rate": 44.4
+    },
+    {
+      "bucket": "巨额流出(>5亿)",
+      "sample": 87,
+      "avg_return_5d": 0.41,
+      "win_rate": 44.8
+    }
+  ],
+  "consecutive_days_analysis": [
+    {
+      "consecutive_days": 2,
+      "sample_5d": 69,
+      "avg_return_5d": 0.32,
+      "win_rate_5d": 52.2,
+      "sample_10d": 64,
+      "avg_return_10d": -0.25,
+      "win_rate_10d": 45.3
+    },
+    {
+      "consecutive_days": 3,
+      "sample_5d": 30,
+      "avg_return_5d": 1.14,
+      "win_rate_5d": 56.7,
+      "sample_10d": 30,
+      "avg_return_10d": 0.92,
+      "win_rate_10d": 43.3
+    },
+    {
+      "consecutive_days": 4,
+      "sample_5d": 14,
+      "avg_return_5d": 0.68,
+      "win_rate_5d": 57.1,
+      "sample_10d": 14,
+      "avg_return_10d": -0.49,
+      "win_rate_10d": 50.0
+    },
+    {
+      "consecutive_days": 5,
+      "sample_5d": 7,
+      "avg_return_5d": 2.45,
+      "win_rate_5d": 71.4,
+      "sample_10d": 7,
+      "avg_return_10d": 2.14,
+      "win_rate_10d": 28.6
+    },
+    {
+      "consecutive_days": 6,
+      "sample_5d": 2,
+      "avg_return_5d": 6.69,
+      "win_rate_5d": 100.0,
+      "sample_10d": 2,
+      "avg_return_10d": 12.54,
+      "win_rate_10d": 100.0
+    },
+    {
+      "consecutive_days": 7,
+      "sample_5d": 1,
+      "avg_return_5d": 5.8,
+      "win_rate_5d": 100.0,
+      "sample_10d": 1,
+      "avg_return_10d": 27.33,
+      "win_rate_10d": 100.0
+    }
+  ],
+  "divergence_patterns": [
+    {
+      "code": "588710",
+      "name": "科创半导体设备ETF",
+      "cap_group": "ETF",
+      "type": "价涨资金流出",
+      "count": 39,
+      "reversal_count": 18,
+      "reversal_prob": 46.2,
+      "avg_future_return": 2.38
+    },
+    {
+      "code": "588710",
+      "name": "科创半导体设备ETF",
+      "cap_group": "ETF",
+      "type": "价跌资金流入",
+      "count": 1,
+      "reversal_count": 1,
+      "reversal_prob": 100.0,
+      "avg_future_return": 13.82
+    },
+    {
+      "code": "688981",
+      "name": "中芯国际",
+      "cap_group": "大盘",
+      "type": "价涨资金流出",
+      "count": 23,
+      "reversal_count": 11,
+      "reversal_prob": 47.8,
+      "avg_future_return": -0.16
+    },
+    {
+      "code": "300750",
+      "name": "宁德时代",
+      "cap_group": "大盘",
+      "type": "价涨资金流出",
+      "count": 17,
+      "reversal_count": 8,
+      "reversal_prob": 47.1,
+      "avg_future_return": 0.18
+    },
+    {
+      "code": "300750",
+      "name": "宁德时代",
+      "cap_group": "大盘",
+      "type": "价跌资金流入",
+      "count": 12,
+      "reversal_count": 2,
+      "reversal_prob": 16.7,
+      "avg_future_return": -3.28
+    },
+    {
+      "code": "603893",
+      "name": "瑞芯微",
+      "cap_group": "中盘",
+      "type": "价涨资金流出",
+      "count": 24,
+      "reversal_count": 7,
+      "reversal_prob": 29.2,
+      "avg_future_return": 1.67
+    },
+    {
+      "code": "603893",
+      "name": "瑞芯微",
+      "cap_group": "中盘",
+      "type": "价跌资金流入",
+      "count": 10,
+      "reversal_count": 5,
+      "reversal_prob": 50.0,
+      "avg_future_return": 4.24
+    },
+    {
+      "code": "300165",
+      "name": "新天科技",
+      "cap_group": "中盘",
+      "type": "价跌资金流入",
+      "count": 8,
+      "reversal_count": 6,
+      "reversal_prob": 75.0,
+      "avg_future_return": 5.27
+    },
+    {
+      "code": "300165",
+      "name": "新天科技",
+      "cap_group": "中盘",
+      "type": "价涨资金流出",
+      "count": 30,
+      "reversal_count": 15,
+      "reversal_prob": 50.0,
+      "avg_future_return": 2.92
+    },
+    {
+      "code": "002222",
+      "name": "福晶科技",
+      "cap_group": "小盘",
+      "type": "价涨资金流出",
+      "count": 19,
+      "reversal_count": 12,
+      "reversal_prob": 63.2,
+      "avg_future_return": -1.43
+    },
+    {
+      "code": "002222",
+      "name": "福晶科技",
+      "cap_group": "小盘",
+      "type": "价跌资金流入",
+      "count": 1,
+      "reversal_count": 1,
+      "reversal_prob": 100.0,
+      "avg_future_return": 7.36
+    },
+    {
+      "code": "300322",
+      "name": "硕贝德",
+      "cap_group": "小盘",
+      "type": "价涨资金流出",
+      "count": 13,
+      "reversal_count": 7,
+      "reversal_prob": 53.8,
+      "avg_future_return": -2.38
+    },
+    {
+      "code": "300322",
+      "name": "硕贝德",
+      "cap_group": "小盘",
+      "type": "价跌资金流入",
+      "count": 19,
+      "reversal_count": 9,
+      "reversal_prob": 47.4,
+      "avg_future_return": -2.1
+    }
+  ],
+  "divergence_type_summary": [
+    {
+      "type": "价涨资金流出",
+      "total_count": 165,
+      "total_reversal": 78,
+      "reversal_prob": 47.3,
+      "avg_return": 0.98
+    },
+    {
+      "type": "价跌资金流入",
+      "total_count": 51,
+      "total_reversal": 24,
+      "reversal_prob": 47.1,
+      "avg_return": 0.52
+    }
+  ],
+  "actionable_rules": [
+    {
+      "id": 1,
+      "rule": "优先在当日相关系数≥0.7的标的上使用资金流信号",
+      "rationale": "高相关组平均胜率53.8%，平均收益1.61%",
+      "action": "计算目标股票20日滚动相关系数，仅对≥0.7的标的触发后续信号",
+      "scope": "全市场适用，作为信号筛选的第一道过滤"
+    },
+    {
+      "id": 2,
+      "rule": "连续5日主力净流入 → 买入持有5日",
+      "rationale": "样本7次，5日胜率71.4%，平均收益2.45%",
+      "action": "每日盘后扫描全市场，筛选连续5日主力净流入的标的",
+      "scope": "需结合规则1（相关系数过滤）使用"
+    },
+    {
+      "id": 3,
+      "rule": "大单净占比 > 10% 且主力净流入 → 次日持有",
+      "rationale": "样本288次，次日胜率46.9%，平均收益-0.04%",
+      "action": "计算个股大单净占比=(超大单+大单)/四档绝对值之和，超过10%且主力净流入时触发",
+      "scope": "次日交易信号，适合短线操作"
+    },
+    {
+      "id": 4,
+      "rule": "出现价涨资金流出背离 → 反向操作（反转概率47.3%）",
+      "rationale": "样本165次，反转概率47.3%，背离后5日平均收益0.98%",
+      "action": "检测连续5日价格与资金流方向不一致时触发，反向持有5日",
+      "scope": "价涨资金流出信号效果最好"
+    },
+    {
+      "id": 5,
+      "rule": "主力小额流入(0-0.2亿) → 5日内做多；主力巨额流入(>5亿) → 做空/回避",
+      "rationale": "巨额流入后5日胜率63.6%，均收2.55%；巨额流入(>5亿)后均收-0.48%",
+      "action": "按主力净流入绝对规模分档，巨额流入时看多，巨额流出时看空",
+      "scope": "适用于判断资金流规模对后续走势的影响"
+    },
+    {
+      "id": 6,
+      "rule": "资金流信号在中盘股上效果最好（胜率66.7%）",
+      "rationale": "大盘均胜率36.6%，中盘66.7%，小盘56.2%",
+      "action": "对中小盘股加大资金流信号权重，对大盘股降低权重或作为辅助参考",
+      "scope": "市值分组特征，适用于全市场选股时的信号权重调整"
+    }
+  ],
+  "summary_text": [
+    "1. 资金流是同步指标而非先行指标：当日相关系数普遍较高(0.6-0.86)，但次日相关接近零，说明资金流更多反映当日市场情绪，对次日走势预测力有限。",
+    "2. 连续流入比单日流入更有效：连续3-4日主力净流入后的5日收益胜率高于单日信号，趋势确认比单点信号更可靠。",
+    "3. 市值越小信号越有效：中小盘股的资金流信号胜率普遍高于大盘股，大盘股资金流出信号（如宁德时代60日净流出108亿）反而可能持续下跌不止。",
+    "4. 背离信号有反转价值但不稳定：价涨资金流出的背离反转概率在35%-65%之间，需结合市值和行业判断；小盘股背离反转概率更高。",
+    "5. 相关性可作为信号过滤器：当日相关系数≥0.7的标的，资金流信号效果显著优于低相关标的，建议作为信号体系的第一道筛选。",
+    "6. 大单占比阈值存在最优点：并非越高越好，存在一个最佳阈值区间，超过后样本量不足且胜率下降。"
+  ]
+}

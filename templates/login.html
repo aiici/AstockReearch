@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A股信号系统 — 登录</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0e1a;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh;
+  }
+  .login-box {
+    background: #131825;
+    border: 1px solid #1e2a40;
+    border-radius: 12px;
+    padding: 40px;
+    width: 400px;
+    max-width: 90vw;
+  }
+  .login-box h1 {
+    font-size: 22px; text-align: center; margin-bottom: 8px;
+    background: linear-gradient(135deg, #ff3d3d, #ff9800);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .login-box .sub {
+    text-align: center; font-size: 12px; color: #6b7280; margin-bottom: 30px;
+  }
+  .tabs { display: flex; gap: 0; margin-bottom: 24px; border-radius: 8px; overflow: hidden; }
+  .tab {
+    flex: 1; padding: 10px; text-align: center; cursor: pointer;
+    background: #1a2030; border: none; color: #6b7280; font-size: 14px;
+    transition: all 0.2s;
+  }
+  .tab.active { background: #1e6fff; color: #fff; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 12px; color: #9ca3af; margin-bottom: 6px; }
+  .field input {
+    width: 100%; padding: 12px 14px; background: #1a2030;
+    border: 1px solid #2a3548; border-radius: 8px; color: #fff;
+    font-size: 14px; outline: none; transition: border 0.2s;
+  }
+  .field input:focus { border-color: #1e6fff; }
+  .btn {
+    width: 100%; padding: 12px; border: none; border-radius: 8px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #1e6fff, #00c853);
+    color: #fff;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .msg { text-align: center; font-size: 13px; margin-top: 16px; min-height: 20px; }
+  .msg.error { color: #ff3d3d; }
+  .msg.success { color: #00c853; }
+  .footer { text-align: center; margin-top: 30px; }
+  .footer a { color: #6b7280; font-size: 12px; text-decoration: none; }
+  .footer a:hover { color: #1e6fff; }
+</style>
+</head>
+<body>
+<div class="login-box">
+  <h1>A股信号系统</h1>
+  <div class="sub">资金流驱动的买卖信号引擎</div>
+
+  <div class="tabs">
+    <button class="tab active" id="tabLogin" onclick="switchTab('login')">登录</button>
+    <button class="tab" id="tabRegister" onclick="switchTab('register')">注册</button>
+  </div>
+
+  <form id="authForm" onsubmit="return handleSubmit(event)">
+    <div class="field">
+      <label>用户名</label>
+      <input type="text" id="username" placeholder="2-20个字符" required>
+    </div>
+    <div class="field">
+      <label>密码</label>
+      <input type="password" id="password" placeholder="至少6个字符" required>
+    </div>
+    <button type="submit" class="btn btn-primary" id="submitBtn">登录</button>
+  </form>
+
+  <div class="msg" id="msgBox"></div>
+
+  <div class="footer">
+    <a href="/">← 返回研究仪表盘</a>
+  </div>
+</div>
+
+<script>
+let mode = 'login';
+
+function switchTab(m) {
+  mode = m;
+  document.getElementById('tabLogin').classList.toggle('active', m === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', m === 'register');
+  document.getElementById('submitBtn').textContent = m === 'login' ? '登录' : '注册';
+  document.getElementById('msgBox').textContent = '';
+  document.getElementById('msgBox').className = 'msg';
+}
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.getElementById('submitBtn');
+  const msg = document.getElementById('msgBox');
+
+  btn.disabled = true;
+  btn.textContent = '处理中...';
+  msg.className = 'msg';
+
+  try {
+    const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await resp.json();
+
+    if (resp.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      msg.className = 'msg success';
+      msg.textContent = (mode === 'login' ? '登录' : '注册') + '成功，正在跳转...';
+      setTimeout(() => { window.location.href = '/system'; }, 800);
+    } else {
+      msg.className = 'msg error';
+      msg.textContent = data.error || '操作失败';
+    }
+  } catch (err) {
+    msg.className = 'msg error';
+    msg.textContent = '网络错误: ' + err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = mode === 'login' ? '登录' : '注册';
+  }
+  return false;
+}
+
+// 如果已有 token，直接跳转
+if (localStorage.getItem('token')) {
+  fetch('/api/auth/verify', {
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+  }).then(r => { if (r.ok) window.location.href = '/system'; });
+}
+</script>
+</body>
+</html>
